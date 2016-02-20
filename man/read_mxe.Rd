@@ -41,7 +41,7 @@ elements:
   \itemize{
   \item{\code{xll}}{: The x coordinate of the lower left corner of the extent.}
   \item{\code{yll}}{: The y coordinate of the lower left corner of the extent.}
-  \item{\code{cellsize}}{: The grid resolution. Note that horizontal and
+  \item{\code{res}}{: The grid resolution. Note that horizontal and
   vertical resolution are assumed equal.}
   \item{\code{nrow}}{: The number of rows of data.}
   \item{\code{ncol}}{: The number of columns of data.}
@@ -64,7 +64,7 @@ Based on \href{http://rpubs.com/puddleduck/91946}{"Reading mxe
   files with R - revisited"} by Peter D. Wilson.
 }
 \seealso{
-\code{\link{project_maxent}}
+\code{\link{project}}
 }
 \keyword{maxent,}
 \keyword{read}

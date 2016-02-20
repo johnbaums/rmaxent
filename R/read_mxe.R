@@ -30,7 +30,7 @@
 #'   \itemize{
 #'   \item{\code{xll}}{: The x coordinate of the lower left corner of the extent.}
 #'   \item{\code{yll}}{: The y coordinate of the lower left corner of the extent.}
-#'   \item{\code{cellsize}}{: The grid resolution. Note that horizontal and
+#'   \item{\code{res}}{: The grid resolution. Note that horizontal and
 #'   vertical resolution are assumed equal.}
 #'   \item{\code{nrow}}{: The number of rows of data.}
 #'   \item{\code{ncol}}{: The number of columns of data.}
@@ -43,16 +43,18 @@
 #' @references Based on \href{http://rpubs.com/puddleduck/91946}{"Reading mxe
 #'   files with R - revisited"} by Peter D. Wilson.
 #' @keywords maxent, read
-#' @seealso \code{\link{project_maxent}}
+#' @seealso \code{\link{project}}
 #' @importFrom raster raster extent res<-
+#' @importFrom methods is
+#' @importFrom utils txtProgressBar setTxtProgressBar
 #' @export
-read_mxe <- function(file, ext, snap='near', chunk_size=100000, return_raster=TRUE) {
+read_mxe <- function(file, ext, snap='near', chunk_size=100000, 
+                     return_raster=TRUE) {
   if (missing(file)) stop("No file name supplied.", call.=FALSE)
   if (!file.exists(file)) 
     stop("Supplied file name (", file, ") not found.", call.=FALSE)
   mxe.gz <- gzfile(file, "rb")
   on.exit(close(mxe.gz))
-  
   java_header <- readBin(mxe.gz, "raw", 4, endian="big")
   blocktype <- readBin(mxe.gz, "raw", 1, endian="big")
   blocksize <- 
@@ -63,7 +65,7 @@ read_mxe <- function(file, ext, snap='near', chunk_size=100000, return_raster=TR
   
   xll <- readBin(mxe.gz, "numeric", endian="big")
   yll <- readBin(mxe.gz, "numeric", endian="big")     
-  cellsize <- readBin(mxe.gz, "numeric", endian="big")
+  res <- readBin(mxe.gz, "numeric", endian="big")
   nrow <- readBin(mxe.gz, "integer", endian="big")    
   ncol <- readBin(mxe.gz, "integer", endian="big")    
   nodata <- readBin(mxe.gz, "integer", endian="big")  
@@ -71,14 +73,15 @@ read_mxe <- function(file, ext, snap='near', chunk_size=100000, return_raster=TR
   
   if (!missing(ext)) {
     if(inherits(ext, 'SpatialPolygons')) {
-      ext <- extent(ext)
-    } else if (!(is.numeric(ext) & length(ext) == 4) & !is(ext, 'Extent') ) {
+      ext <- raster::extent(ext)
+    } else if (!(is.numeric(ext) & length(ext) == 4) & 
+               !methods::is(ext, 'Extent') ) {
       stop('If provided, extent must be an Extent object, a SpatialPolygons* ',
            'object from which an extent can be extracted, or a numeric vector ',
            'giving the clipping extent as xmin, xmax, ymin, ymax.')
     } 
   } else {
-    ext <- c(xll, xll + ncol*cellsize, yll, yll + nrow*cellsize)
+    ext <- c(xll, xll + ncol*res, yll, yll + nrow*res)
     chunk_size <- ncol*nrow
   }
   
@@ -86,8 +89,8 @@ read_mxe <- function(file, ext, snap='near', chunk_size=100000, return_raster=TR
     stop('Invalid extent provided. If ext is a vector, it must have order: ',
          'xmin, xmax, ymin, ymax.')
   
-  x_seq <- seq(xll, xll + ncol*cellsize, by=cellsize)
-  y_seq <- seq(yll, yll + nrow*cellsize, by=cellsize)
+  x_seq <- seq(xll, xll + ncol*res, by=res)
+  y_seq <- seq(yll, yll + nrow*res, by=res)
   
   if(!missing(ext)) {
     ext <- switch(
@@ -95,25 +98,25 @@ read_mxe <- function(file, ext, snap='near', chunk_size=100000, return_raster=TR
       near=c(x_seq[apply(abs(sapply(ext[1:2], '-', x_seq)), 2, which.min)],
              y_seq[apply(abs(sapply(ext[3:4], '-', y_seq)), 2, which.min)]),
       out=c(max(x_seq[which((ext[1] - x_seq) > 0 & 
-                              (ext[1] - x_seq) < cellsize)], xll),
+                              (ext[1] - x_seq) < res)], xll),
             min(x_seq[which((ext[2] - x_seq) < 0 & 
-                              abs(ext[2] - x_seq) < cellsize)], xll+ncol*cellsize),
+                              abs(ext[2] - x_seq) < res)], xll+ncol*res),
             max(y_seq[which((ext[3] - y_seq) > 0 & 
-                              (ext[3] - y_seq) < cellsize)], yll),
+                              (ext[3] - y_seq) < res)], yll),
             min(y_seq[which((ext[4] - y_seq) < 0 & 
-                              abs(ext[4] - y_seq) < cellsize)], yll+nrow*cellsize)),
+                              abs(ext[4] - y_seq) < res)], yll+nrow*res)),
       `in`=c(max(x_seq[which((ext[1] - x_seq) < 0 & 
-                               abs(ext[1] - x_seq) < cellsize)], xll),
+                               abs(ext[1] - x_seq) < res)], xll),
              min(x_seq[which((ext[2] - x_seq) > 0 & 
-                               (ext[2] - x_seq) < cellsize)], xll+ncol*cellsize),
+                               (ext[2] - x_seq) < res)], xll+ncol*res),
              max(y_seq[which((ext[3] - y_seq) < 0 & 
-                               abs(ext[3] - y_seq) < cellsize)], yll),
+                               abs(ext[3] - y_seq) < res)], yll),
              min(y_seq[which((ext[4] - y_seq) > 0 & 
-                               (ext[4] - y_seq) < cellsize)], yll+nrow*cellsize)),
+                               (ext[4] - y_seq) < res)], yll+nrow*res)),
       stop("snap must be one of: 'near', 'in', or 'out'."))
   }
   
-  ext_rc <- round(c((ext[1:2] - xll)/cellsize, nrow - (ext[3:4] - yll)/cellsize))
+  ext_rc <- round(c((ext[1:2] - xll)/res, nrow - (ext[3:4] - yll)/res))
   
   rows <- (ext_rc[4]+1):ext_rc[3]
   cols <- (ext_rc[1]+1):ext_rc[2]
@@ -150,7 +153,7 @@ read_mxe <- function(file, ext, snap='near', chunk_size=100000, return_raster=TR
       grp_lengths <- cumsum(c(0, sapply(grp, length)*len))
       
       if(length(grp) > 1) {
-        pb <- txtProgressBar(1, length(grp), 1, style=3) 
+        pb <- utils::txtProgressBar(1, length(grp), 1, style=3) 
       }
       d <- unlist(c(list(pre), lapply(seq_along(grp), function(i) {
         cells_g <- (blocksize-40)/dat$size + 
@@ -162,7 +165,7 @@ read_mxe <- function(file, ext, snap='near', chunk_size=100000, return_raster=TR
           readBin(mxe.gz, dat$what, size=dat$size, n=len, endian="big", 
                   signed=dat$signed)  
         }))
-        if (length(grp) > 1) setTxtProgressBar(pb, i)
+        if (length(grp) > 1) utils::setTxtProgressBar(pb, i)
         d[cells_g %in% cells]
       })))
       if(length(grp) > 1) close(pb)
@@ -172,12 +175,12 @@ read_mxe <- function(file, ext, snap='near', chunk_size=100000, return_raster=TR
   dat$data[dat$data == nodata] <- NA
   
   if(isTRUE(return_raster)) {
-    r <- raster(xmn=ext[1], ymn=ext[3], xmx=ext[2], ymx=ext[4])
-    res(r) <- cellsize
+    r <- raster::raster(xmn=ext[1], ymn=ext[3], xmx=ext[2], ymx=ext[4])
+    res(r) <- res
     r[] <- dat$data
     r
   } else {
-    list(xll=ext[1], yll=ext[3], cellsize=cellsize, nrow=diff(ext_rc[4:3]), 
+    list(xll=ext[1], yll=ext[3], res=res, nrow=diff(ext_rc[4:3]), 
          ncol=diff(ext_rc[1:2]), nodata=nodata, datatype=dat$datatype, 
          data=dat$data)  
   }

@@ -27,19 +27,19 @@ Calculate a limiting factor surface corresponding to projections of a Maxent
 model.
 }
 \examples{
-library(dismo)
-library(rJava)
-
-fnames <- list.files(path=paste(system.file(package="dismo"), '/ex', sep=''),
-                     pattern='grd', full.names=TRUE )
-predictors <- stack(fnames)
-occurence <- paste(system.file(package='dismo'), '/ex/bradypus.csv', sep='')
-occ <- read.table(occurence, header=TRUE, sep=',')[,-1]
-me <- maxent(predictors, occ, factors='biome')
-
-limiting(predictors, me)
+# This uses the ?dismo::maxent example. Only run if maxent.jar exists.
+if(require(dismo) && require(rJava) && 
+   file.exists(system.file('java/maxent.jar', package='dismo'))) {
+  fnames <- list.files(system.file('ex', package='dismo'), '\\\\.grd$', 
+                       full.names=TRUE)
+  predictors <- stack(fnames)
+  occurrence <- system.file('ex/bradypus.csv', package='dismo')
+  occ <- read.table(occurrence, header=TRUE, sep=',')[,-1]
+  me <- maxent(predictors, occ, factors='biome')
+  limiting(predictors, me)
+}
 }
 \references{
-Elith, J., Kearney, M. and Phillips, S. (2010), \href{http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2010.00036.x/abstract}{The art of modelling range-shifting species.} \emph{Methods in Ecology and Evolution}, 1: 330–342. doi: 10.1111/j.2041-210X.2010.00036.x
+Elith, J., Kearney, M. and Phillips, S. (2010), \href{http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2010.00036.x/abstract}{The art of modelling range-shifting species.} \emph{Methods in Ecology and Evolution}, 1: 330-342. doi: 10.1111/j.2041-210X.2010.00036.x
 }
 

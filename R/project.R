@@ -27,7 +27,7 @@
 #' the raster layers will be replaced with \code{data.table}s in the returned
 #' list.
 #' @author John B. Baumgartner, \email{johnbaums@@gmail.com}
-#' @details \code{project_maxent} uses feature weights described in a .lambas
+#' @details \code{project} uses feature weights described in a .lambas
 #'   file or \code{MaxEnt} object to predict a Maxent model to environmental
 #'   data. This function performs the projection entirely in R, without the need
 #'   for the Maxent Java software. For tested datasets, it performs the 
@@ -45,16 +45,18 @@
 #' @seealso \code{\link{read_mxe}}
 #' @importFrom raster raster mask compareRaster as.data.frame
 #' @importFrom data.table data.table as.data.table is.data.table :=
+#' @importFrom methods is
+#' @importFrom stats complete.cases
 #' @export
 #' @examples
 #' # Below we use the dismo::maxent example to fit a Maxent model:
 #' if (require(dismo) && require(rJava) && 
-#'     file.exists(file.path(system.file(package='dismo'), 'java/maxent.jar'))) {
-#'   fnames <- list.files(path=paste(system.file(package="dismo"), '/ex', sep=''),
-#'                        pattern='grd', full.names=TRUE )
+#'     file.exists(system.file('java/maxent.jar', package='dismo'))) {
+#'   fnames <- list.files(system.file('ex', package='dismo'), '\\.grd$', 
+#'                        full.names=TRUE )
 #'   predictors <- stack(fnames)
-#'   occurence <- paste(system.file(package="dismo"), '/ex/bradypus.csv', sep='')
-#'   occ <- read.table(occurence, header=TRUE, sep=',')[,-1]
+#'   occurrence <- system.file('ex/bradypus.csv', package='dismo')
+#'   occ <- read.table(occurrence, header=TRUE, sep=',')[,-1]
 #'   me <- maxent(predictors, occ, factors='biome')
 #' 
 #'   # ... and then predict it to the full environmental grids:
@@ -65,14 +67,14 @@
 #' }
 project <- function(lambdas, newdata, mask, quiet=FALSE) {
   if(!missing(mask)) {
-    if(!is(mask, 'RasterLayer')) {
+    if(!methods::is(mask, 'RasterLayer')) {
       stop('mask should be a RasterLayer object')
     } else {
-      if(!is(newdata, 'Raster')) {
+      if(!methods::is(newdata, 'Raster')) {
         stop('If mask is provided, newdata should be a Raster object with the',
              'same dimensions, extent, and CRS.')
       }
-      if(!compareRaster(mask, newdata, stopiffalse=FALSE))
+      if(!raster::compareRaster(mask, newdata, stopiffalse=FALSE))
         stop('If mask is provided, newdata should be a Raster object with the',
              'same dimensions, extent, and CRS.')
     }
@@ -80,43 +82,46 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
   lambdas <- parse_lambdas(lambdas)
   meta <- lambdas[-1]
   lambdas <- lambdas[[1]]
-  is_cat <- unique(gsub('\\(|==.*\\)', '', subset(lambdas, type=='categorical')$feature))
+  is_cat <- unique(
+    gsub('\\(|==.*\\)', '', lambdas[lambdas$type=='categorical', 'feature']))
   nms <- unique(unlist(strsplit(lambdas$var, ',')))
-  clamp_limits <- data.table(lambdas[lambdas$type=='linear', ])
+  clamp_limits <- data.table::data.table(lambdas[lambdas$type=='linear', ])
   lambdas <- lambdas[lambdas$lambda != 0, ]
-  lambdas <- split(lambdas, c('other', 'hinge')[grepl('hinge', lambdas$type) + 1])
+  lambdas <- split(lambdas, c('other', 'hinge')[
+    grepl('hinge', lambdas$type) + 1])
   if (is(newdata, 'RasterStack') | is(newdata, 'RasterBrick')) {
-    pred_raw <- pred_logistic <- raster(newdata)
+    pred_raw <- pred_logistic <- raster::raster(newdata)
     if(!missing(mask)) {
-      newdata <- mask(newdata, mask)
+      newdata <- raster::mask(newdata, mask)
     }
-    newdata <- as.data.table(as.data.frame(newdata))
+    newdata <- data.table::as.data.table(as.data.frame(newdata))
   }
-  if (is.matrix(newdata)) newdata <- as.data.table(newdata)
+  if (is.matrix(newdata)) newdata <- data.table::as.data.table(newdata)
   if (is.list(newdata) & !is.data.frame(newdata)) {
     if(length(unique(sapply(newdata, length))) != 1) 
       stop('newdata was provided as a list, but its elements vary in length.')
-    newdata <- as.data.table(newdata)
+    newdata <- data.table::as.data.table(newdata)
   }
   if (!is.data.frame(newdata))
     stop('newdata must be a list, data.table, data.frame, matrix, RasterStack,',
          'or RasterBrick.')
-  if (!is.data.table(newdata)) 
-    newdata <- as.data.table(newdata)
+  if (!data.table::is.data.table(newdata)) 
+    newdata <- data.table::as.data.table(newdata)
   if(!all(nms %in% names(newdata))) {
     stop(sprintf('Variables missing in newdata: %s', 
                  paste(setdiff(nms, colnames(newdata)), collapse=', ')))
   }
   if (any(!names(newdata) %in% nms)) {
-    newdata <- newdata[, setdiff(names(newdata), nms) := NULL]  
+    newdata <- newdata[, setdiff(names(newdata), nms) := NULL]
   }
   na <- !complete.cases(newdata)
   newdata <- newdata[!na]
   
   # Clamp newdata
   invisible(lapply(setdiff(names(newdata), is_cat), function(x) {
-    newdata[, c(x) := pmax(pmin(get(x), clamp_limits[feature==x, max]), 
-                        clamp_limits[feature==x, min])]
+    clamp_max <- clamp_limits[clamp_limits$feature==x, max]
+    clamp_min <- clamp_limits[clamp_limits$feature==x, min]
+    newdata[, c(x) := pmax(pmin(get(x), clamp_max), clamp_min)]
   }))
   
   k <- sum(sapply(lambdas, nrow))

@@ -15,21 +15,21 @@
 #'   categorical variables). The predictor associated with the largest decrease
 #'   in suitability is the most limiting factor.
 #' @references 
-#'   Elith, J., Kearney, M. and Phillips, S. (2010), \href{http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2010.00036.x/abstract}{The art of modelling range-shifting species.} \emph{Methods in Ecology and Evolution}, 1: 330–342. doi: 10.1111/j.2041-210X.2010.00036.x
-#' @importFrom raster stack stackApply as.factor levels
+#'   Elith, J., Kearney, M. and Phillips, S. (2010), \href{http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2010.00036.x/abstract}{The art of modelling range-shifting species.} \emph{Methods in Ecology and Evolution}, 1: 330-342. doi: 10.1111/j.2041-210X.2010.00036.x
+#' @importFrom raster stack stackApply as.factor levels which.max
 #' @export
 #' @examples
-#' library(dismo)
-#' library(rJava)
-#' 
-#' fnames <- list.files(path=paste(system.file(package="dismo"), '/ex', sep=''),
-#'                      pattern='grd', full.names=TRUE )
-#' predictors <- stack(fnames)
-#' occurence <- paste(system.file(package='dismo'), '/ex/bradypus.csv', sep='')
-#' occ <- read.table(occurence, header=TRUE, sep=',')[,-1]
-#' me <- maxent(predictors, occ, factors='biome')
-#' 
-#' limiting(predictors, me)
+#' # This uses the ?dismo::maxent example. Only run if maxent.jar exists.
+#' if(require(dismo) && require(rJava) && 
+#'    file.exists(system.file('java/maxent.jar', package='dismo'))) {
+#'   fnames <- list.files(system.file('ex', package='dismo'), '\\.grd$', 
+#'                        full.names=TRUE)
+#'   predictors <- stack(fnames)
+#'   occurrence <- system.file('ex/bradypus.csv', package='dismo')
+#'   occ <- read.table(occurrence, header=TRUE, sep=',')[,-1]
+#'   me <- maxent(predictors, occ, factors='biome')
+#'   limiting(predictors, me)
+#' }
 limiting <- function(x, me) {
   best <- lapply(seq_along(me@presence), function(i) {
     if(any(subset(parse_lambdas(me)$lambdas, 
@@ -43,10 +43,10 @@ limiting <- function(x, me) {
   L <- lapply(seq_along(names(me@presence)), function(i) {
     p <- x[[names(me@presence)]]
     p[[i]][] <- best[[i]]
-    project_maxent(me, p, quiet=TRUE)$prediction_logistic
+    project(me, p, quiet=TRUE)$prediction_logistic
   })
-  pred <- project_maxent(me, x, quiet=TRUE)$prediction_logistic
-  limiting <- which.max(stack(L)- pred)
+  pred <- project(me, x, quiet=TRUE)$prediction_logistic
+  limiting <- raster::which.max(raster::stack(L)- pred)
   limiting <- raster::as.factor(limiting)
   lev <- raster::levels(limiting)[[1]]
   lev$predictor <- names(me@presence)[lev$ID]

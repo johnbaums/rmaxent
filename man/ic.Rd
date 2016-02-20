@@ -35,24 +35,28 @@ use hinge or threshold features because the number of predictors is not
 estimated correctly.
 }
 \examples{
-library(dismo)
-fnames <- list.files(path=file.path(system.file(package='dismo'), 'ex'), 
-                     patt='grd', full=TRUE )
-predictors <- stack(fnames)
-occ <- read.csv(file.path(system.file(package="dismo"), 'ex/bradypus.csv'))[, -1]
-me <- maxent(predictors, occ, args=c('hinge=false', 'threshold=false'),
-             path=tempdir())
-r <- project_maxent(me, predictors, quiet=TRUE)$prediction_raw
+# Below we use the dismo::maxent example to fit a Maxent model:
+if (require(dismo) && require(rJava) && 
+    file.exists(system.file('java/maxent.jar', package='dismo'))) {
+  fnames <- list.files(system.file('ex', package='dismo'), '\\\\.grd$', 
+                       full.names=TRUE )
+  predictors <- stack(fnames)
+  occurrence <- system.file('ex/bradypus.csv', package='dismo')
+  occ <- read.table(occurrence, header=TRUE, sep=',')[,-1]
+  me <- maxent(predictors, occ, args=c('hinge=false', 'threshold=false'),
+               path=tempdir())
+  r <- project(me, predictors, quiet=TRUE)$prediction_raw
 
-# passing the raster object to pred.raw and the maxent object to lambdas:
-maxent_IC(r, occ, me)
-
-# passing a lambdas file path to lambdas:
-maxent_IC(r, occ, file.path(tempdir(), 'species.lambdas'))
-
-# passing a raster file path and lambdas file path to lambdas:
-writeRaster(r, f <- tempfile(fileext='.tif'))
-maxent_IC(f, occ, file.path(tempdir(), 'species.lambdas'))
+  # passing the raster object to pred.raw and the maxent object to lambdas:
+  ic(r, occ, me)
+  
+  # passing a lambdas file path to lambdas:
+  ic(r, occ, file.path(tempdir(), 'species.lambdas'))
+  
+  # passing a raster file path and lambdas file path to lambdas:
+  writeRaster(r, f <- tempfile(fileext='.tif'))
+  ic(f, occ, file.path(tempdir(), 'species.lambdas'))
+}
 }
 \references{
 \itemize{

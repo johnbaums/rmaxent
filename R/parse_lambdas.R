@@ -31,17 +31,20 @@
 #'   \item{Wilson, P. W. (2009) \href{http://gsp.humboldt.edu/OLM/GSP_570/Learning Modules/10 BlueSpray_Maxent_Uncertinaty/MaxEnt lambda files.pdf}{\emph{Guidelines for computing MaxEnt model output values from a lambdas file}}.}
 #'   \item{\emph{Maxent software for species habitat modeling, version 3.3.3k} help file (software freely available \href{https://www.cs.princeton.edu/~schapire/maxent/}{here}).}
 #' }
-#' @seealso \code{\link{read_mxe}} \code{\link{project_maxent}}
+#' @seealso \code{\link{read_mxe}} \code{\link{project}}
+#' @importFrom methods is
+#' @importFrom utils count.fields
+#' @importFrom stats setNames
 #' @export
 #' @examples
 #' # Below we use the dismo::maxent example to fit a Maxent model:
 #' if (require(dismo) && require(rJava) && 
-#'     file.exists(file.path(system.file(package='dismo'), 'java/maxent.jar'))) {
-#'   fnames <- list.files(path=paste(system.file(package="dismo"), '/ex', sep=''),
-#'   pattern='grd', full.names=TRUE )
+#'     file.exists(system.file('java/maxent.jar', package='dismo'))) {
+#'   fnames <- list.files(system.file('ex', package="dismo"), '\\.grd$', 
+#'                        full.names=TRUE )
 #'   predictors <- stack(fnames)
-#'   occurence <- paste(system.file(package="dismo"), '/ex/bradypus.csv', sep='')
-#'   occ <- read.table(occurence, header=TRUE, sep=',')[,-1]
+#'   occurrence <- system.file('ex/bradypus.csv', package='dismo')
+#'   occ <- read.table(occurrence, header=TRUE, sep=',')[,-1]
 #'   me <- maxent(predictors, occ, path=file.path(tempdir(), 'example'), 
 #'                factors='biome')
 #' 
@@ -51,20 +54,20 @@
 #'   
 #' }
 parse_lambdas <- function(lambdas) {
-  if(is(lambdas, 'MaxEnt')) {
+  if(methods::is(lambdas, 'MaxEnt')) {
     lambdas <- lambdas@lambdas
   } else {
     lambdas <- readLines(lambdas)
   }
   con <- textConnection(lambdas)
-  n <- count.fields(con, ',', quote='')
+  n <- utils::count.fields(con, ',', quote='')
   close(con)
-  meta <- setNames(lapply(strsplit(lambdas[n==2], ', '), 
-                          function(x) as.numeric(x[2])),
-                   sapply(strsplit(lambdas[n==2], ', '), '[[', 1))
-  lambdas <- setNames(data.frame(do.call(rbind, strsplit(lambdas[n==4], ', ')), 
-                                 stringsAsFactors=FALSE),
-                      c('feature', 'lambda', 'min', 'max'))
+  meta <- stats::setNames(lapply(strsplit(lambdas[n==2], ', '), 
+                                 function(x) as.numeric(x[2])),
+                          sapply(strsplit(lambdas[n==2], ', '), '[[', 1))
+  lambdas <- stats::setNames(data.frame(do.call(
+    rbind, strsplit(lambdas[n==4], ', ')), stringsAsFactors=FALSE),
+    c('feature', 'lambda', 'min', 'max'))
   lambdas[, -1] <- lapply(lambdas[, -1], as.numeric)
   lambdas$feature <- sub('=', '==', lambdas$feature)
   lambdas$feature <- sub('<', '<=', lambdas$feature)

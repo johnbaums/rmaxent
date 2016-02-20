@@ -24,27 +24,31 @@
 #'   \item{Warren, D. L., Glor, R. E. and Turelli, M. 2009. \href{http://onlinelibrary.wiley.com/doi/10.1111/j.1600-0587.2009.06142.x/full}{ENMTools: a toolbox for comparative studies of environmental niche models.} \emph{Ecography} 33:607-611}
 #'   \item{\href{http://enmtools.blogspot.com.au/}{ENMTools}}
 #' }
-#' @importFrom raster raster cellFromXY extract
+#' @importFrom raster raster cellFromXY extract nlayers values
 #' @export
 #' @examples
-#' library(dismo)
-#' fnames <- list.files(path=file.path(system.file(package='dismo'), 'ex'), 
-#'                      patt='grd', full=TRUE )
-#' predictors <- stack(fnames)
-#' occ <- read.csv(file.path(system.file(package="dismo"), 'ex/bradypus.csv'))[, -1]
-#' me <- maxent(predictors, occ, args=c('hinge=false', 'threshold=false'),
-#'              path=tempdir())
-#' r <- project_maxent(me, predictors, quiet=TRUE)$prediction_raw
+#' # Below we use the dismo::maxent example to fit a Maxent model:
+#' if (require(dismo) && require(rJava) && 
+#'     file.exists(system.file('java/maxent.jar', package='dismo'))) {
+#'   fnames <- list.files(system.file('ex', package='dismo'), '\\.grd$', 
+#'                        full.names=TRUE )
+#'   predictors <- stack(fnames)
+#'   occurrence <- system.file('ex/bradypus.csv', package='dismo')
+#'   occ <- read.table(occurrence, header=TRUE, sep=',')[,-1]
+#'   me <- maxent(predictors, occ, args=c('hinge=false', 'threshold=false'),
+#'                path=tempdir())
+#'   r <- project(me, predictors, quiet=TRUE)$prediction_raw
 #' 
-#' # passing the raster object to pred.raw and the maxent object to lambdas:
-#' maxent_IC(r, occ, me)
-#' 
-#' # passing a lambdas file path to lambdas:
-#' maxent_IC(r, occ, file.path(tempdir(), 'species.lambdas'))
-#' 
-#' # passing a raster file path and lambdas file path to lambdas:
-#' writeRaster(r, f <- tempfile(fileext='.tif'))
-#' maxent_IC(f, occ, file.path(tempdir(), 'species.lambdas'))
+#'   # passing the raster object to pred.raw and the maxent object to lambdas:
+#'   ic(r, occ, me)
+#'   
+#'   # passing a lambdas file path to lambdas:
+#'   ic(r, occ, file.path(tempdir(), 'species.lambdas'))
+#'   
+#'   # passing a raster file path and lambdas file path to lambdas:
+#'   writeRaster(r, f <- tempfile(fileext='.tif'))
+#'   ic(f, occ, file.path(tempdir(), 'species.lambdas'))
+#' }
 ic <- function(x, occ, lambdas) {
   if(is.character(x)) x <- raster::raster(x)
   lambdas <- parse_lambdas(lambdas)$lambdas
@@ -56,15 +60,14 @@ ic <- function(x, occ, lambdas) {
   occ <- occ[!duplicated(cellFromXY(x, occ)), ]
   n <- nrow(occ)
   if(k > n) {
-    warning('Number of parameters greater than number of occurrence points for ',
+    warning('Number of parameters exceeds number of occurrence points for ',
             substitute(x), '. Information criteria not calculated.')
-    out <- 
     return(c(n=n, k=k, ll=NA, AIC=NA, AICc=NA, BIC=NA))
   }
-  out <- t(sapply(seq_len(nlayers(x)), function(i) {
+  out <- t(sapply(seq_len(raster::nlayers(x)), function(i) {
     x <- x[[i]]
-    x <- x/sum(values(x), na.rm=TRUE)
-    ll <- sum(log(extract(x, occ)))
+    x <- x/sum(raster::values(x), na.rm=TRUE)
+    ll <- sum(log(raster::extract(x, occ)))
     AIC <- 2*k - 2*ll
     AICc <- AIC + ((2*k*(k+1))/(n - k - 1))
     BIC <- k*log(n) - 2*ll

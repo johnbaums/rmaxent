@@ -40,12 +40,12 @@ accuracy of its projections.
 \examples{
 # Below we use the dismo::maxent example to fit a Maxent model:
 if (require(dismo) && require(rJava) && 
-    file.exists(file.path(system.file(package='dismo'), 'java/maxent.jar'))) {
-  fnames <- list.files(path=paste(system.file(package="dismo"), '/ex', sep=''),
-  pattern='grd', full.names=TRUE )
+    file.exists(system.file('java/maxent.jar', package='dismo'))) {
+  fnames <- list.files(system.file('ex', package="dismo"), '\\\\.grd$', 
+                       full.names=TRUE )
   predictors <- stack(fnames)
-  occurence <- paste(system.file(package="dismo"), '/ex/bradypus.csv', sep='')
-  occ <- read.table(occurence, header=TRUE, sep=',')[,-1]
+  occurrence <- system.file('ex/bradypus.csv', package='dismo')
+  occ <- read.table(occurrence, header=TRUE, sep=',')[,-1]
   me <- maxent(predictors, occ, path=file.path(tempdir(), 'example'), 
                factors='biome')
 
@@ -65,7 +65,7 @@ John B. Baumgartner, \email{johnbaums@gmail.com}
 }
 }
 \seealso{
-\code{\link{read_mxe}} \code{\link{project_maxent}}
+\code{\link{read_mxe}} \code{\link{project}}
 }
 \keyword{maxent,}
 \keyword{predict,}

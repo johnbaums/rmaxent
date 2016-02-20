@@ -41,7 +41,7 @@ list.
 Project a fitted Maxent model by predicting to new environmental data.
 }
 \details{
-\code{project_maxent} uses feature weights described in a .lambas
+\code{project} uses feature weights described in a .lambas
   file or \code{MaxEnt} object to predict a Maxent model to environmental
   data. This function performs the projection entirely in R, without the need
   for the Maxent Java software. For tested datasets, it performs the 
@@ -56,12 +56,12 @@ accuracy of its projections.
 \examples{
 # Below we use the dismo::maxent example to fit a Maxent model:
 if (require(dismo) && require(rJava) && 
-    file.exists(file.path(system.file(package='dismo'), 'java/maxent.jar'))) {
-  fnames <- list.files(path=paste(system.file(package="dismo"), '/ex', sep=''),
-                       pattern='grd', full.names=TRUE )
+    file.exists(system.file('java/maxent.jar', package='dismo'))) {
+  fnames <- list.files(system.file('ex', package='dismo'), '\\\\.grd$', 
+                       full.names=TRUE )
   predictors <- stack(fnames)
-  occurence <- paste(system.file(package="dismo"), '/ex/bradypus.csv', sep='')
-  occ <- read.table(occurence, header=TRUE, sep=',')[,-1]
+  occurrence <- system.file('ex/bradypus.csv', package='dismo')
+  occ <- read.table(occurrence, header=TRUE, sep=',')[,-1]
   me <- maxent(predictors, occ, factors='biome')
 
   # ... and then predict it to the full environmental grids:

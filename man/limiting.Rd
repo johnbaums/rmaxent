@@ -40,6 +40,6 @@ if(require(dismo) && require(rJava) &&
 }
 }
 \references{
-Elith, J., Kearney, M. and Phillips, S. (2010), \href{http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2010.00036.x/abstract}{The art of modelling range-shifting species.} \emph{Methods in Ecology and Evolution}, 1: 330-342. doi: 10.1111/j.2041-210X.2010.00036.x
+Elith, J., Kearney, M. and Phillips, S. (2010), \href{http://doi.org/10.1111/j.2041-210X.2010.00036.x}{The art of modelling range-shifting species.} \emph{Methods in Ecology and Evolution}, 1: 330-342. doi: 10.1111/j.2041-210X.2010.00036.x
 }
 

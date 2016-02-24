@@ -15,7 +15,7 @@
 #'   categorical variables). The predictor associated with the largest decrease
 #'   in suitability is the most limiting factor.
 #' @references 
-#'   Elith, J., Kearney, M. and Phillips, S. (2010), \href{http://onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2010.00036.x/abstract}{The art of modelling range-shifting species.} \emph{Methods in Ecology and Evolution}, 1: 330-342. doi: 10.1111/j.2041-210X.2010.00036.x
+#'   Elith, J., Kearney, M. and Phillips, S. (2010), \href{http://doi.org/10.1111/j.2041-210X.2010.00036.x}{The art of modelling range-shifting species.} \emph{Methods in Ecology and Evolution}, 1: 330-342. doi: 10.1111/j.2041-210X.2010.00036.x
 #' @importFrom raster stack stackApply as.factor levels which.max
 #' @export
 #' @examples
@@ -37,7 +37,7 @@ limiting <- function(x, me) {
       as.numeric(names(which.max(table(me@presence[, i]))), 
                  levels=levels(me@presence[, i]))
     } else {
-      mean(me@presence[, i]) # should vectorise with colMeans, but then need to sort out categoricals
+      mean(me@presence[, i])
     }
   })
   L <- lapply(seq_along(names(me@presence)), function(i) {

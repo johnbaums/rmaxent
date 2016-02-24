@@ -7,18 +7,22 @@
 ic(x, occ, lambdas)
 }
 \arguments{
-\item{x}{Either a file path to a Maxent raw prediction raster, or a
-\code{Raster} or \code{RasterStack} containing raw Maxent predictions for
-which information criteria will be calculated.}
+\item{x}{Either a \code{vector} of one or more file paths to Maxent raw 
+prediction raster files, or a \code{Raster} or \code{RasterStack}
+containing raw Maxent predictions for which information criteria will be
+calculated.}
 
 \item{occ}{A \code{matrix} or \code{data.frame} containing the coordinates
-for occurrence data used to fit the model.}
+for occurrence data used to fit the model. This is assumed to be common to 
+all models being compared.}
 
-\item{lambdas}{The path to a Maxent .lambdas file, or a \code{MaxEnt} fitted
-model object.}
+\item{lambdas}{A \code{vector} of one or more file paths to Maxent .lambdas 
+files, or a \code{list} of one or more \code{MaxEnt} fitted model objects.
+The length of this vector/list should equal the length (or number of 
+layers) of \code{x}.}
 }
 \value{
-An n x 6 matrix, where n is the number of Maxent rasters for which
+An n x 6 matrix, where n is the number of Maxent models for which
   information criteria are to be calculated. Columns give \code{n} (the
   number of occurrence records used for model training), \code{k} (the number
   of features with non-zero weights), \code{ll} (the negative log likelihood
@@ -56,11 +60,17 @@ if (require(dismo) && require(rJava) &&
   # passing a raster file path and lambdas file path to lambdas:
   writeRaster(r, f <- tempfile(fileext='.tif'))
   ic(f, occ, file.path(tempdir(), 'species.lambdas'))
+  
+  # comparing multiple models
+  me2 <- maxent(predictors, occ, args=c('hinge=false', 'threshold=false',
+                'betamultiplier=3'), path=tempdir())
+  r2 <- project(me2, predictors, quiet=TRUE)$prediction_raw               
+  ic(stack(r, r2), occ, list(me, me2))
 }
 }
 \references{
 \itemize{
-  \item{Warren, D. L., Glor, R. E. and Turelli, M. 2009. \href{http://onlinelibrary.wiley.com/doi/10.1111/j.1600-0587.2009.06142.x/full}{ENMTools: a toolbox for comparative studies of environmental niche models.} \emph{Ecography} 33:607-611}
+  \item{Warren, D. L., Glor, R. E. and Turelli, M. 2009. \href{http://doi.org/10.1111/j.1600-0587.2009.06142.x}{ENMTools: a toolbox for comparative studies of environmental niche models.} \emph{Ecography} 33:607-611}
   \item{\href{http://enmtools.blogspot.com.au/}{ENMTools}}
 }
 }

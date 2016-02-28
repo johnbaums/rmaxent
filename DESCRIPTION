@@ -1,9 +1,10 @@
 Package: rmaxent
 Type: Package
 Title: Tools for working with Maxent in R
-Description: An R implementation of tasks related to Maxent species distribution
-    modelling: projecting models; computing information criteria; creating 
-    limiting factors maps; importing mxe files; and parsing .lambdas files.
+Description: An R implementation of tasks related to 'Maxent' species 
+    distribution modelling: projecting models; computing information criteria; 
+    creating limiting factors maps; importing mxe files; and parsing .lambdas 
+    files.
 Version: 0.1.1
 Date: 2016-02-28
 Depends:

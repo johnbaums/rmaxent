@@ -83,7 +83,9 @@ ic <- function(x, occ, lambdas) {
   }
   out <- t(mapply(function(pred, lam, k) {
     pred <- pred/sum(raster::values(pred), na.rm=TRUE)
-    ll <- sum(log(raster::extract(pred, occ)))
+    vals <- na.omit(raster::extract(pred, occ))
+    n <- length(vals)
+    ll <- sum(log(vals))
     AIC <- 2*k - 2*ll
     AICc <- AIC + ((2*k*(k+1))/(n - k - 1))
     BIC <- k*log(n) - 2*ll

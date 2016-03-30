@@ -55,9 +55,6 @@ if (require(dismo) && require(rJava) &&
   
 }
 }
-\author{
-John B. Baumgartner, \email{johnbaums@gmail.com}
-}
 \references{
 \itemize{
   \item{Wilson, P. W. (2009) \href{http://gsp.humboldt.edu/OLM/GSP_570/Learning Modules/10 BlueSpray_Maxent_Uncertinaty/MaxEnt lambda files.pdf}{\emph{Guidelines for computing MaxEnt model output values from a lambdas file}}.}

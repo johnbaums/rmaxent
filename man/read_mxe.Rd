@@ -54,11 +54,6 @@ elements:
 Read (and optionally clip) binary mxe files created by the Maxent habitat 
 suitability modelling software package.
 }
-\author{
-John B. Baumgartner, \email{johnbaums@gmail.com}
-
-Peter D. Wilson
-}
 \references{
 Based on \href{http://rpubs.com/puddleduck/91946}{"Reading mxe
   files with R - revisited"} by Peter D. Wilson.

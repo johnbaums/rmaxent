@@ -26,7 +26,6 @@
 #' If \code{newdata} is \emph{not} a \code{RasterStack} or \code{RasterBrick},
 #' the raster layers will be replaced with \code{data.table}s in the returned
 #' list.
-#' @author John B. Baumgartner, \email{johnbaums@@gmail.com}
 #' @details \code{project} uses feature weights described in a .lambas
 #'   file or \code{MaxEnt} object to predict a Maxent model to environmental
 #'   data. This function performs the projection entirely in R, without the need

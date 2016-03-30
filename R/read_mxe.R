@@ -38,8 +38,6 @@
 #'   \item{\code{datatype}}{: A character string indicating the data type.}
 #'   \item{\code{data}}{: A vector whose elements are the raster cell values.}
 #' }
-#' @author John B. Baumgartner, \email{johnbaums@@gmail.com}
-#' @author Peter D. Wilson
 #' @references Based on \href{http://rpubs.com/puddleduck/91946}{"Reading mxe
 #'   files with R - revisited"} by Peter D. Wilson.
 #' @keywords maxent, read

@@ -1,6 +1,8 @@
-# rmaxent: working with Maxent Species Distribution Models in R
-
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 [![Travis-CI Build Status](https://travis-ci.org/johnbaums/rmaxent.svg?branch=master)](https://travis-ci.org/johnbaums/rmaxent)
+
+rmaxent: working with Maxent Species Distribution Models in R
+=============================================================
 
 (*Please note that some characters and equations do not render correctly in Github Flavored Markdown. Please refer to the [html version](https://rawgit.com/johnbaums/rmaxent/master/README.html) of this document.*)
 
@@ -10,7 +12,11 @@ Additional functionality is provided by the `rmaxent` package, which allows Java
 
 The `rmaxent` package also includes function `ic`, which calculates information criteria (AIC, AIC<sub>c</sub>, BIC) for Maxent models as implemented in ENMTools (Warren *et al.* 2010). These quantities can be used to optimise model complexity (e.g., Warren & Seifert 2011), and for highlighting model parsimony. The user should note, though, that this approach uses the number of parameters (Maxent features with non-zero weights) in place of degrees of freedom when calculating model likelihood, and this may underestimate the true degrees of freedom, particularly when hinge and/or threshold features are in use (see Warren *et al.* 2014 for details). However, despite this potential issue, model selection based on this calculation of AIC<sub>c</sub> has been shown to outperform selection based on predictive capacity (i.e., using AUC; Warren & Seifert 2011).
 
-Finally, I also provide functions to: import raster data stored in Maxent’s binary .mxe raster format (`read_mxe`; written in collaboration with Peter D. Wilson); parse Maxent .lambdas files (files that contain information about model features), returning information about feature types, weights, minima and maxima, as well as the model’s entropy and other estimated constants (`parse_lambdas`); and create limiting factor maps (Elith *et al.* 2010) that identify the environmental variable that is least favourable at each point across the landscape (`limiting`).
+Finally, `rmaxent` also provides functions to:
+
+-   import raster data stored in Maxent’s binary .mxe raster format (`read_mxe`; written in collaboration with Peter D. Wilson);
+-   parse Maxent .lambdas files (files that contain information about model features), returning information about feature types, weights, minima and maxima, as well as the model’s entropy and other estimated constants (`parse_lambdas`); and
+-   create limiting factor maps (Elith *et al.* 2010) that identify the environmental variable that is least favourable at each point across the landscape (`limiting`).
 
 Installation
 ------------
@@ -31,9 +37,9 @@ Examples
 
 Projecting a fitted Maxent model requires predictor states for all variables included in the model, and the model's ".lambdas" file---a plain text file containing details of all features considered by the model, including their weights (i.e., coefficients), minima, maxima, and some constants required in the calculation of fitted values.
 
-Below, I use the example data distributed with the `dismo` package. These data include coordinates representing localitions where the brown-throated three-toed sloth, *Bradypus variegatus* has been recorded, and spatial, gridded data giving biome classification and values for a range of current climate variables.
+Below, we use the example data distributed with the `dismo` package. These data include coordinates representing localitions where the brown-throated three-toed sloth, *Bradypus variegatus* has been recorded, and spatial, gridded data giving biome classification and values for a range of current climate variables.
 
-We then import the *B. variegatus* occurrence and predictor data from the appropriate paths.
+Let's import the *B. variegatus* occurrence and predictor data from the appropriate paths:
 
 ``` r
 occ_file <- system.file('ex/bradypus.csv', package='dismo')
@@ -53,7 +59,7 @@ library(dismo)
 me <- maxent(predictors, occ, factors='biome', args=c('hinge=false', 'threshold=false'))
 ```
 
-The Maxent model has now been fit, and the resulting object, `me`, which is of class `MaxEnt`, can be passed to various functions in `rmaxent`. As mentioned earlier, the function in `rmaxent` that I believe will be most useful is `project`, which takes a trained Maxent model and predicts it to new data. The procedure for calculating fitted values from a Maxent .lambdas file and a vector of predictor values for a given site is as follows:
+The Maxent model has now been fit, and the resulting object, `me`, which is of class `MaxEnt`, can be passed to various functions in `rmaxent`. For example, `project` takes a trained Maxent model and predicts it to new data. The procedure for calculating fitted values from a Maxent .lambdas file and a vector of predictor values for a given site is as follows:
 
 1.  clamp each untransformed predictor to its training extrema (i.e., the maximum and minimum of the model-fitting data), by setting all values greater than the maximum to maximum, and all values less than the minimum to the minimum;
 2.  considering only non-linear features with non-zero weights (see description of `parse_lambdas`), take each and calculate its value. For example, if a quadratic feature has a non-zero weight, the quadratic feature's value is the square of the corresponding linear feature;
@@ -90,15 +96,6 @@ And plot the result:
 
 ``` r
 library(rasterVis)
-```
-
-    ## Loading required package: lattice
-
-    ## Loading required package: latticeExtra
-
-    ## Loading required package: RColorBrewer
-
-``` r
 library(viridis)
 levelplot(prediction$prediction_logistic, margin=FALSE, col.regions=viridis, at=seq(0, 1, len=100)) +
   layer(sp.points(SpatialPoints(occ), pch=20, col=1))
@@ -128,7 +125,7 @@ print(timings, signif=2)
     ##  rmaxent 100 110 141.1127    120 200 200    10  a 
     ##    dismo 270 280 358.5439    320 370 560    10   b
 
-On average, the `dismo` method takes approximately times as long as the `rmaxent` method. Here the difference is rather trivial, but when projecting to data with higher spatial resolution and/or larger extent, the gains in efficiency are welcome, particularly if projecting many models to multiple environmental scenarios.
+On average, the `dismo` method takes approximately 2.5 times as long as the `rmaxent` method. Here the difference is rather trivial, but when projecting to data with higher spatial resolution and/or larger extent, the gains in efficiency are welcome, particularly if projecting many models to multiple environmental scenarios.
 
 We can check that the predictions are equivalent, at least to machine precision:
 

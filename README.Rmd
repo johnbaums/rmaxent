@@ -24,7 +24,11 @@ Additional functionality is provided by the `rmaxent` package, which allows Java
 
 The `rmaxent` package also includes function `ic`, which calculates information criteria (AIC, AIC~c~, BIC) for Maxent models as implemented in ENMTools [@Warren2010]. These quantities can be used to optimise model complexity [e.g., @Warren2011], and for highlighting model parsimony. The user should note, though, that this approach uses the number of parameters (Maxent features with non-zero weights) in place of degrees of freedom when calculating model likelihood, and this may underestimate the true degrees of freedom, particularly when hinge and/or threshold features are in use [see @Warren2014 for details]. However, despite this potential issue, model selection based on this calculation of AIC~c~ has been shown to outperform selection based on predictive capacity [i.e., using AUC; @Warren2011].
 
-Finally, I also provide functions to: import raster data stored in Maxent’s binary .mxe raster format (`read_mxe`; written in collaboration with Peter D. Wilson); parse Maxent .lambdas files (files that contain information about model features), returning information about feature types, weights, minima and maxima, as well as the model’s entropy and other estimated constants (`parse_lambdas`); and create limiting factor maps [@Elith2010] that identify the environmental variable that is least favourable at each point across the landscape (`limiting`).
+Finally, `rmaxent` also provides functions to: 
+
+* import raster data stored in Maxent’s binary .mxe raster format (`read_mxe`; written in collaboration with Peter D. Wilson); 
+* parse Maxent .lambdas files (files that contain information about model features), returning information about feature types, weights, minima and maxima, as well as the model’s entropy and other estimated constants (`parse_lambdas`); and 
+* create limiting factor maps [@Elith2010] that identify the environmental variable that is least favourable at each point across the landscape (`limiting`).
 
 
 ## Installation
@@ -44,10 +48,10 @@ library(rmaxent)
 
 Projecting a fitted Maxent model requires predictor states for all variables included in the model, and the model's ".lambdas" file---a plain text file containing details of all features considered by the model, including their weights (i.e., coefficients), minima, maxima, and some constants required in the calculation of fitted values.
 
-Below, I use the example data distributed with the `dismo` package. These data include coordinates representing localitions where the brown-throated three-toed sloth, _Bradypus variegatus_ has been recorded, and spatial, gridded data giving biome classification and values for a range of current climate variables.
+Below, we use the example data distributed with the `dismo` package. These data include coordinates representing localitions where the brown-throated three-toed sloth, _Bradypus variegatus_ has been recorded, and spatial, gridded data giving biome classification and values for a range of current climate variables.
 
 
-We then import the _B. variegatus_ occurrence and predictor data from the appropriate paths.
+Let's import the _B. variegatus_ occurrence and predictor data from the appropriate paths:
 
 ```{r read_occ, message=FALSE, warning=FALSE}
 occ_file <- system.file('ex/bradypus.csv', package='dismo')
@@ -67,7 +71,7 @@ library(dismo)
 me <- maxent(predictors, occ, factors='biome', args=c('hinge=false', 'threshold=false'))
 ```
 
-The Maxent model has now been fit, and the resulting object, `me`, which is of class `MaxEnt`, can be passed to various functions in `rmaxent`. As mentioned earlier, the function in `rmaxent` that I believe will be most useful is `project`, which takes a trained Maxent model and predicts it to new data. The procedure for calculating fitted values from a Maxent .lambdas file and a vector of predictor values for a given site is as follows:
+The Maxent model has now been fit, and the resulting object, `me`, which is of class `MaxEnt`, can be passed to various functions in `rmaxent`. For example, `project` takes a trained Maxent model and predicts it to new data. The procedure for calculating fitted values from a Maxent .lambdas file and a vector of predictor values for a given site is as follows:
 
 1. clamp each untransformed predictor to its training extrema (i.e., the maximum and minimum of the model-fitting data), by setting all values greater than the maximum to maximum, and all values less than the minimum to the minimum;
 2. considering only non-linear features with non-zero weights (see  description of `parse_lambdas`), take each and calculate its value. For example, if a quadratic feature has a non-zero weight, the quadratic feature's value is the square of the corresponding linear feature;
@@ -102,7 +106,7 @@ prediction <- project(me, predictors)
 
 And plot the result:
 
-```{r plot1, fig.cap='__Figure 1. Maxent habitat suitability prediction for the brown-throated three-toed sloth, _Bradypus variegatus_.__'}
+```{r plot1, fig.cap='__Figure 1. Maxent habitat suitability prediction for the brown-throated three-toed sloth, _Bradypus variegatus_.__', message=FALSE}
 library(rasterVis)
 library(viridis)
 levelplot(prediction$prediction_logistic, margin=FALSE, col.regions=viridis, at=seq(0, 1, len=100)) +
@@ -128,7 +132,7 @@ print(timings, signif=2)
 prop_time <- round(summary(timings)[2, 'mean']/summary(timings)[1, 'mean'], 1)
 ```
 
-On average, the `dismo` method takes approximately \Sexpr{prop_time} times as long as the `rmaxent` method. Here the difference is rather trivial, but when projecting to data with higher spatial resolution and/or larger extent, the gains in efficiency are welcome, particularly if projecting many models to multiple environmental scenarios.
+On average, the `dismo` method takes approximately `r prop_time` times as long as the `rmaxent` method. Here the difference is rather trivial, but when projecting to data with higher spatial resolution and/or larger extent, the gains in efficiency are welcome, particularly if projecting many models to multiple environmental scenarios.
 
 We can check that the predictions are equivalent, at least to machine precision:
 

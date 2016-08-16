@@ -1,4 +1,8 @@
+# rmaxent: working with Maxent Species Distribution Models in R
+
 [![Travis-CI Build Status](https://travis-ci.org/johnbaums/rmaxent.svg?branch=master)](https://travis-ci.org/johnbaums/rmaxent)
+
+(*Please note that some characters and equations do not render correctly in Github Flavored Markdown. Please refer to the [html version](https://rawgit.com/johnbaums/rmaxent/master/README.html) of this document.)
 
 Correlative species distribution models (SDMs; Franklin & Miller 2010) are now the most common tool for predicting habitat suitability. Maxent, a machine-learning regression-type approach to fitting SDMs based on the principle of maximum entropy (Phillips *et al.* 2004, 2006; Elith *et al.* 2011), is used in a vast proportion of published SDM studies. The Maxent software is written in Java, and provides a graphical user interface in addition to command line operation. In 2010, the `dismo` R package (Hijmans *et al.* 2016) was added to CRAN, providing, amongst other features, an R interface to Maxent that streamlined the process of preparing data, and fitting, evaluating, and projecting models.
 

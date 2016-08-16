@@ -1,8 +1,10 @@
 ---
 title: "rmaxent: working with Maxent Species Distribution Models in R"
 output: 
-  md_document:
-    variant: markdown_github
+  html_document: 
+    fig_caption: yes
+    keep_md: yes
+    theme: united
 bibliography: references.bib
 csl: methods-in-ecology-and-evolution.csl
 ---

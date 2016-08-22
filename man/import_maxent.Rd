@@ -27,6 +27,6 @@ occ <- read.csv(file.path(system.file(package="dismo"), 'ex/bradypus.csv'))[, -1
 d <- file.path(tempdir(), 'demo')
 dir.create(d)
 maxent(predictors, occ, factors='biome', path=d)
-m <- import(d)
+m <- import_maxent(d)
 }
 

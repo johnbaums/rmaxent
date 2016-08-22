@@ -19,7 +19,7 @@
 #' d <- file.path(tempdir(), 'demo')
 #' dir.create(d)
 #' maxent(predictors, occ, factors='biome', path=d)
-#' m <- import(d)
+#' m <- import_maxent(d)
 import_maxent <- function(dir, prefix='species') {
   m <- methods::new('MaxEnt',
            lambdas=readLines(file.path(dir, paste0(prefix, '.lambdas'))),

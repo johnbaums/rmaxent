@@ -2,16 +2,22 @@
 % Please edit documentation in R/import_maxent.R
 \name{import_maxent}
 \alias{import_maxent}
-\title{Import a Maxent model into a MaxEnt object}
+\title{Import a Maxent model as a MaxEnt object}
 \usage{
-import_maxent(dir, prefix = "species")
+import_maxent(dir, lambdas, html)
 }
 \arguments{
 \item{dir}{The file path to the directory containing Maxent output.}
 
-\item{prefix}{The species name, which forms the prefix of the .lambdas file. 
-The default is \code{'species'} (and so species.lambdas is expected to
-exist in \code{dir}).}
+\item{lambdas}{The name of the .lambdas file representing the fitted model 
+(e.g. \code{'species.lambdas'}), excluding the containing path. If not
+provided, the first (alphabetically) .lambdas file found in \code{dir} will
+be used.}
+
+\item{html}{The name of the .html file containing reported Maxent results 
+(e.g. \code{'maxent.html'}), excluding the containing path. If not 
+provided, the first (alphabetically) .html file found in \code{dir} will be
+used.}
 }
 \value{
 A \code{MaxEnt} object (see \code{\link{MaxEnt-class}}).
@@ -26,7 +32,7 @@ predictors <- stack(list.files(
 occ <- read.csv(file.path(system.file(package="dismo"), 'ex/bradypus.csv'))[, -1]
 d <- file.path(tempdir(), 'demo')
 dir.create(d)
-maxent(predictors, occ, factors='biome', path=d)
-m <- import_maxent(d)
+m1 <- maxent(predictors, occ, factors='biome', path=d)
+m2 <- import_maxent(d)
 }
 

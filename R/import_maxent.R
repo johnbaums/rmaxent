@@ -1,11 +1,16 @@
-#' Import a Maxent model into a MaxEnt object
+#' Import a Maxent model as a MaxEnt object
 #'
 #' Create a MaxEnt object from a previously-fitted Maxent model
 #' 
 #' @param dir The file path to the directory containing Maxent output.
-#' @param prefix The species name, which forms the prefix of the .lambdas file. 
-#'   The default is \code{'species'} (and so species.lambdas is expected to
-#'   exist in \code{dir}).
+#' @param lambdas The name of the .lambdas file representing the fitted model 
+#'   (e.g. \code{'species.lambdas'}), excluding the containing path. If not
+#'   provided, the first (alphabetically) .lambdas file found in \code{dir} will
+#'   be used.
+#' @param html The name of the .html file containing reported Maxent results 
+#'   (e.g. \code{'maxent.html'}), excluding the containing path. If not 
+#'   provided, the first (alphabetically) .html file found in \code{dir} will be
+#'   used.
 #' @return A \code{MaxEnt} object (see \code{\link{MaxEnt-class}}).
 #' @importClassesFrom dismo MaxEnt
 #' @importFrom methods new
@@ -18,17 +23,22 @@
 #' occ <- read.csv(file.path(system.file(package="dismo"), 'ex/bradypus.csv'))[, -1]
 #' d <- file.path(tempdir(), 'demo')
 #' dir.create(d)
-#' maxent(predictors, occ, factors='biome', path=d)
-#' m <- import_maxent(d)
-import_maxent <- function(dir, prefix='species') {
+#' m1 <- maxent(predictors, occ, factors='biome', path=d)
+#' m2 <- import_maxent(d)
+import_maxent <- function(dir, lambdas, html) {
+  l <- ifelse(missing(lambdas), 
+         list.files(dir, '\\.lambdas$', full.names=TRUE)[1], 
+         file.path(dir, basename(lambdas)))
+  h <- ifelse(missing(html), 
+              list.files(dir, '\\.html$', full.names=TRUE)[1], 
+              file.path(dir, basename(html)))
   m <- methods::new('MaxEnt',
-           lambdas=readLines(file.path(dir, paste0(prefix, '.lambdas'))),
+           lambdas=readLines(l),
            results=t(utils::read.csv(file.path(dir, 'maxentResults.csv'))[, -1]),
            path=dir,
-           html=file.path(dir, 'maxent.html'),
+           html=h,
            hasabsence=file.exists(file.path(dir, 'absence')))
-  if(m@hasabsence) m@absence <- read.csv(file.path(dir, 'absence'))[, -(1:3)]
-  if(file.exists(file.path(dir, 'presence')))
-    m@presence <- utils::read.csv(file.path(dir, 'presence'))[, -(1:3)]
+  m@absence <- read.csv(file.path(dir, 'absence'))[, -(1:3)]
+  m@presence <- utils::read.csv(file.path(dir, 'presence'))[, -(1:3)]
   m
 }

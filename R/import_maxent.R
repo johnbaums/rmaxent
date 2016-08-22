@@ -17,14 +17,18 @@
 #' @importFrom utils read.csv
 #' @export
 #' @examples
+#' # Below we use the dismo::maxent example to fit a Maxent model:
 #' library(dismo)
-#' predictors <- stack(list.files(
-#'   file.path(system.file(package='dismo'), 'ex'), '\\.grd$', full=TRUE))
-#' occ <- read.csv(file.path(system.file(package="dismo"), 'ex/bradypus.csv'))[, -1]
-#' d <- file.path(tempdir(), 'demo')
-#' dir.create(d)
-#' m1 <- maxent(predictors, occ, factors='biome', path=d)
-#' m2 <- import_maxent(d)
+#' if (require(dismo) && require(rJava) && 
+#'     file.exists(system.file('java/maxent.jar', package='dismo'))) {
+#'   predictors <- stack(list.files(
+#'     file.path(system.file(package='dismo'), 'ex'), '\\.grd$', full=TRUE))
+#'   occ <- read.csv(file.path(system.file(package="dismo"), 'ex/bradypus.csv'))[, -1]
+#'   d <- file.path(tempdir(), 'demo')
+#'   dir.create(d)
+#'   m1 <- maxent(predictors, occ, factors='biome', path=d)
+#'   m2 <- import_maxent(d)
+#' }
 import_maxent <- function(dir, lambdas, html) {
   l <- ifelse(missing(lambdas), 
          list.files(dir, '\\.lambdas$', full.names=TRUE)[1], 

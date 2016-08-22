@@ -3,10 +3,9 @@ Type: Package
 Title: Tools for working with Maxent in R
 Description: An R implementation of tasks related to 'Maxent' species 
     distribution modelling: projecting models; computing information criteria; 
-    creating limiting factors maps; importing mxe files; and parsing .lambdas 
-    files.
-Version: 0.1.2.9000
-Date: 2016-02-28
+    creating limiting factors maps; importing mxe files; recreating MaxEnt class
+    objects and parsing .lambdas files.
+Version: 0.2.2.9000
 Depends:
     R (>= 3.0.1)
 Imports:
@@ -14,9 +13,9 @@ Imports:
     utils,
     stats,
     data.table,
-    raster
+    raster,
+    dismo
 Suggests:
-    dismo,
     rJava
 Authors@R: as.person(c("John B. Baumgartner <johnbaums@gmail.com> [aut, cre]",
                        "Peter D. Wilson [aut]",

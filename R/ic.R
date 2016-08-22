@@ -28,7 +28,8 @@
 #'   \item{Warren, D. L., Glor, R. E. and Turelli, M. 2009. \href{http://doi.org/10.1111/j.1600-0587.2009.06142.x}{ENMTools: a toolbox for comparative studies of environmental niche models.} \emph{Ecography} 33:607-611}
 #'   \item{\href{http://enmtools.blogspot.com.au/}{ENMTools}}
 #' }
-#' @importFrom raster cellFromXY extract nlayers values stack
+#' @importFrom raster cellFromXY extract nlayers values stack unstack
+#' @importFrom stats na.omit
 #' @export
 #' @examples
 #' # Below we use the dismo::maxent example to fit a Maxent model:
@@ -83,14 +84,14 @@ ic <- function(x, occ, lambdas) {
   }
   out <- t(mapply(function(pred, lam, k) {
     pred <- pred/sum(raster::values(pred), na.rm=TRUE)
-    vals <- na.omit(raster::extract(pred, occ))
+    vals <- stats::na.omit(raster::extract(pred, occ))
     n <- length(vals)
     ll <- sum(log(vals))
     AIC <- 2*k - 2*ll
     AICc <- AIC + ((2*k*(k+1))/(n - k - 1))
     BIC <- k*log(n) - 2*ll
     c(n=n, k=k, ll=ll, AIC=AIC, AICc=AICc, BIC=BIC)
-  }, unstack(x), lambdas, k))
+  }, raster::unstack(x), lambdas, k))
   row.names(out) <- names(x)
   out
 }

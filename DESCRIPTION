@@ -18,8 +18,7 @@ Imports:
 Suggests:
     rJava
 Authors@R: as.person(c("John B. Baumgartner <johnbaums@gmail.com> [aut, cre]",
-                       "Peter D. Wilson [aut]",
-                       "Manuel Esperon-Rodriguez [ctb]"))
+                       "Peter D. Wilson [aut]"))
 License: GPL-3
 LazyData: true
 RoxygenNote: 5.0.1

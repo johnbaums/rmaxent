@@ -166,7 +166,10 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
     return(list(prediction_raw=pred_raw,
                 prediction_logistic=pred_logistic))
   } else {
-    return(list(prediction_raw=raw,
-                prediction_logistic=logistic))
+    prediction_raw <- prediction_logistic <- rep(NA_real_, length(na))
+    prediction_raw[!na] <- raw
+    prediction_logistic[!na] <- logistic
+    return(list(prediction_raw=prediction_raw,
+                prediction_logistic=prediction_logistic))
   } 
 }

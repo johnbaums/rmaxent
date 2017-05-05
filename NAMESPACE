@@ -3,6 +3,7 @@
 export(ic)
 export(import_maxent)
 export(limiting)
+export(n_features)
 export(parse_lambdas)
 export(project)
 export(read_mxe)

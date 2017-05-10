@@ -7,7 +7,7 @@
 #' @param lambdas Either a \code{MaxEnt} fitted model object (fitted with the 
 #'   \code{maxent} function in the \code{dismo} package), or a file path to a 
 #'   Maxent .lambdas file.
-#' @return A list with five elements: 
+#' @return A list (of class \code{lambdas}) with five elements: 
 #'  \itemize{
 #'   \item{\code{lambdas}}{: a \code{data.frame} describing the features used in
 #'   a Maxent model, including their weights (lambdas), maxima, minima, and 
@@ -48,7 +48,10 @@
 #'                factors='biome')
 #' 
 #'   # ... and then parse the lambdas information:
-#'   parse_lambdas(me)
+#'   lam <- parse_lambdas(me)
+#'   lam
+#'   str(lam, 1)
+#'   
 #'   parse_lambdas(file.path(tempdir(), 'example/species.lambdas'))
 #'   
 #' }
@@ -82,5 +85,7 @@ parse_lambdas <- function(lambdas) {
   }))
   vars <- gsub("\\^2|\\(.*<=|\\((.*)==.*|`|\\'|\\)", "\\1", lambdas$feature)
   lambdas$var <- sub('\\*', ',', vars)
-  c(list(lambdas=lambdas[, c(1, 6, 2:5)]), meta)
+  l <- c(list(lambdas=lambdas[, c(1, 6, 2:5)]), meta)
+  class(l) <- 'lambdas'
+  l
 }

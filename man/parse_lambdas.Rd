@@ -12,7 +12,7 @@ parse_lambdas(lambdas)
 Maxent .lambdas file.}
 }
 \value{
-A list with five elements: 
+A list (of class \code{lambdas}) with five elements: 
  \itemize{
   \item{\code{lambdas}}{: a \code{data.frame} describing the features used in
   a Maxent model, including their weights (lambdas), maxima, minima, and 
@@ -37,6 +37,7 @@ for predicting to new data.
 This function is still in development, and no guarantee is made for the
 accuracy of its projections.
 }
+
 \examples{
 # Below we use the dismo::maxent example to fit a Maxent model:
 if (require(dismo) && require(rJava) && 
@@ -50,7 +51,10 @@ if (require(dismo) && require(rJava) &&
                factors='biome')
 
   # ... and then parse the lambdas information:
-  parse_lambdas(me)
+  lam <- parse_lambdas(me)
+  lam
+  str(lam, 1)
+  
   parse_lambdas(file.path(tempdir(), 'example/species.lambdas'))
   
 }
@@ -67,4 +71,3 @@ if (require(dismo) && require(rJava) &&
 \keyword{maxent,}
 \keyword{predict,}
 \keyword{project}
-

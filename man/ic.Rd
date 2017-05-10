@@ -38,6 +38,7 @@ These information criteria should \emph{not} be calculated for models that
 use hinge or threshold features because the number of predictors is not
 estimated correctly.
 }
+
 \examples{
 # Below we use the dismo::maxent example to fit a Maxent model:
 if (require(dismo) && require(rJava) && 
@@ -74,4 +75,3 @@ if (require(dismo) && require(rJava) &&
   \item{\href{http://enmtools.blogspot.com.au/}{ENMTools}}
 }
 }
-

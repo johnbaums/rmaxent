@@ -39,4 +39,3 @@ if (require(dismo) && require(rJava) &&
   m2 <- import_maxent(d)
 }
 }
-

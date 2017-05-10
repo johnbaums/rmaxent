@@ -2,9 +2,10 @@
 #'
 #' Project a fitted Maxent model by predicting to new environmental data.
 #'
-#' @param lambdas Either a \code{MaxEnt} fitted model object (fitted with the 
-#'   \code{maxent} function in the \code{dismo} package), or a file path to a 
-#'   Maxent .lambdas file.
+#' @param lambdas Either (1) a \code{MaxEnt} fitted model object (fitted with 
+#'   the \code{maxent} function in the \code{dismo} package), (2) a file path to
+#'   a Maxent .lambdas file, or (3) a \code{lambdas} object returned by 
+#'   \code{\link{parse_lambdas}}.
 #' @param newdata A \code{RasterStack}, \code{RasterBrick}, \code{list},
 #'   \code{data.frame}, \code{data.table}, or \code{matrix} that has
 #'   layers/elements/columns whose names correspond to the names of predictors
@@ -16,12 +17,14 @@
 #'   \code{NA} in the returned output.
 #' @param quiet Logical. Should projection progress be reported?   
 #' @return If \code{newdata} is a \code{RasterStack} or \code{RasterBrick}, a 
-#'   list with two elements: 
+#'   list with three elements: 
 #'  \itemize{
 #'   \item{\code{prediction_raw}}{: a \code{Raster} layer giving the raw Maxent
 #'   prediction; and}
 #'   \item{\code{prediction_logistic}}{: a \code{Raster} layer giving the
 #'   logistic Maxent prediction.}
+#'   \item{\code{prediction_cloglog}}{: a \code{Raster} layer giving the
+#'   cloglog Maxent prediction.}
 #' }
 #' If \code{newdata} is \emph{not} a \code{RasterStack} or \code{RasterBrick},
 #' the raster layers will be replaced with \code{data.table}s in the returned
@@ -61,8 +64,11 @@
 #'   # ... and then predict it to the full environmental grids:
 #'   pred <- project(me, predictors)
 #'   # This is equivalent to using the predict method for MaxEnt objects:
-#'   pred2 <- predict(me, predictors)
+#'   pred2 <- predict(me, predictors, args='outputformat=logistic')
+#'   pred3 <- predict(me, predictors, args='outputformat=cloglog')
+#'   
 #'   all.equal(values(pred$prediction_logistic), values(pred2))
+#'   all.equal(values(pred$prediction_cloglog), values(pred3))
 #' }
 project <- function(lambdas, newdata, mask, quiet=FALSE) {
   if(!missing(mask)) {
@@ -78,7 +84,7 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
              'same dimensions, extent, and CRS.')
     }
   }
-  lambdas <- parse_lambdas(lambdas)
+  if(!rmaxent:::is.lambdas(lambdas)) lambdas <- parse_lambdas(lambdas)
   meta <- lambdas[-1]
   lambdas <- lambdas[[1]]
   is_cat <- unique(
@@ -88,8 +94,8 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
   lambdas <- lambdas[lambdas$lambda != 0, ]
   lambdas <- split(lambdas, c('other', 'hinge')[
     grepl('hinge', lambdas$type) + 1])
-  if (is(newdata, 'RasterStack') | is(newdata, 'RasterBrick')) {
-    pred_raw <- pred_logistic <- raster::raster(newdata)
+  if (is(newdata, 'RasterStack') | is(newdata, 'RasterBrick') | is(newdata, 'Raster')) {
+    pred_raw <- pred_logistic <- pred_cloglog <- raster::raster(newdata)
     if(!missing(mask)) {
       newdata <- raster::mask(newdata, mask)
     }
@@ -159,17 +165,25 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
   }
   
   raw <- exp(lfx - meta$linearPredictorNormalizer) / meta$densityNormalizer
+  cloglog <- 1 - exp(-exp(meta$entropy) * raw)
   logistic <- raw * exp(meta$entropy) / (1 + raw * exp(meta$entropy))
+  #linpred <- rep(NA_real_, length(na))
+  #linpred[!na] <- lfx
   if(exists('pred_raw', inherits=FALSE)) {
     pred_raw[which(!na)] <- raw
     pred_logistic[which(!na)] <- logistic
+    pred_cloglog[which(!na)] <- cloglog
     return(list(prediction_raw=pred_raw,
-                prediction_logistic=pred_logistic))
+                prediction_logistic=pred_logistic,
+                prediction_cloglog=pred_cloglog))
   } else {
-    prediction_raw <- prediction_logistic <- rep(NA_real_, length(na))
+    prediction_raw <- prediction_logistic <- prediction_cloglog <- 
+      rep(NA_real_, length(na))
     prediction_raw[!na] <- raw
     prediction_logistic[!na] <- logistic
+    prediction_logistic[!na] <- cloglog
     return(list(prediction_raw=prediction_raw,
-                prediction_logistic=prediction_logistic))
+                prediction_logistic=prediction_logistic,
+                prediction_cloglog=prediction_cloglog))
   } 
 }

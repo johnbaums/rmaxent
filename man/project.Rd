@@ -7,9 +7,10 @@
 project(lambdas, newdata, mask, quiet = FALSE)
 }
 \arguments{
-\item{lambdas}{Either a \code{MaxEnt} fitted model object (fitted with the 
-\code{maxent} function in the \code{dismo} package), or a file path to a 
-Maxent .lambdas file.}
+\item{lambdas}{Either (1) a \code{MaxEnt} fitted model object (fitted with 
+the \code{maxent} function in the \code{dismo} package), (2) a file path to
+a Maxent .lambdas file, or (3) a \code{lambdas} object returned by 
+\code{\link{parse_lambdas}}.}
 
 \item{newdata}{A \code{RasterStack}, \code{RasterBrick}, \code{list},
 \code{data.frame}, \code{data.table}, or \code{matrix} that has
@@ -26,12 +27,14 @@ the model should \emph{not} be projected. These cells will be assigned
 }
 \value{
 If \code{newdata} is a \code{RasterStack} or \code{RasterBrick}, a 
-  list with two elements: 
+  list with three elements: 
  \itemize{
   \item{\code{prediction_raw}}{: a \code{Raster} layer giving the raw Maxent
   prediction; and}
   \item{\code{prediction_logistic}}{: a \code{Raster} layer giving the
   logistic Maxent prediction.}
+  \item{\code{prediction_cloglog}}{: a \code{Raster} layer giving the
+  cloglog Maxent prediction.}
 }
 If \code{newdata} is \emph{not} a \code{RasterStack} or \code{RasterBrick},
 the raster layers will be replaced with \code{data.table}s in the returned
@@ -53,6 +56,7 @@ Project a fitted Maxent model by predicting to new environmental data.
 This function is still in development, and no guarantee is made for the
 accuracy of its projections.
 }
+
 \examples{
 # Below we use the dismo::maxent example to fit a Maxent model:
 if (require(dismo) && require(rJava) && 
@@ -67,8 +71,11 @@ if (require(dismo) && require(rJava) &&
   # ... and then predict it to the full environmental grids:
   pred <- project(me, predictors)
   # This is equivalent to using the predict method for MaxEnt objects:
-  pred2 <- predict(me, predictors)
+  pred2 <- predict(me, predictors, args='outputformat=logistic')
+  pred3 <- predict(me, predictors, args='outputformat=cloglog')
+  
   all.equal(values(pred$prediction_logistic), values(pred2))
+  all.equal(values(pred$prediction_cloglog), values(pred3))
 }
 }
 \references{
@@ -83,4 +90,3 @@ if (require(dismo) && require(rJava) &&
 \keyword{maxent,}
 \keyword{predict,}
 \keyword{project}
-

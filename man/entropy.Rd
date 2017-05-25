@@ -27,9 +27,9 @@ if (require(dismo) && require(rJava) &&
 
   # ... and then parse the lambdas information:
   lam <- parse_lambdas(me)
+  entropy(lam)
 }
 
-entropy(lam)
 }
 \seealso{
 \code{\link{parse_lambdas}} \code{\link{project}}

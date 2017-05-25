@@ -21,7 +21,7 @@
 #' 
 #'   # ... and then parse the lambdas information:
 #'   lam <- parse_lambdas(me)
+#'   entropy(lam)
 #' }
 #' 
-#' entropy(lam)
 entropy <- function(x) x$entropy

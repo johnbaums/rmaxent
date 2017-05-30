@@ -14,7 +14,8 @@ Imports:
     stats,
     data.table,
     raster,
-    dismo
+    dismo,
+    usdm
 Suggests:
     rJava
 Authors@R: as.person(c("John B. Baumgartner <johnbaums@gmail.com> [aut, cre]",

@@ -78,9 +78,9 @@ simplify <- function(
   occ, bg, path, species_column='species', response_curves=FALSE,
   logistic_format=TRUE, type='PI', cor_thr, pct_thr, quiet=TRUE) {
   if(missing(path)) {
-    nosave <- TRUE
+    save <- FALSE
     path <- tempdir()
-  }
+  } else save <- TRUE
   occ_by_species <- split(occ, occ[[species_column]])
   bg_by_species <- split(bg, bg[[species_column]])
   if(!identical(sort(names(occ_by_species)), sort(names(bg_by_species)))) {
@@ -107,7 +107,7 @@ simplify <- function(
     swd_uncor <- swd[, ok]
     d <- file.path(path, name_, 'full')
     m <- dismo::maxent(swd_uncor, pa, args=args, path=d)
-    if(!isTRUE(nosave)) saveRDS(m, file.path(d, 'model.rds'))
+    if(isTRUE(save)) saveRDS(m, file.path(d, 'model.rds'))
     
     pct <- m@results[grep(type, rownames(m@results)), ]
     pct <- sort(pct[pct > 0])
@@ -124,7 +124,7 @@ simplify <- function(
       pct <- sort(pct[pct > 0])
       names(pct) <- sub(paste0('\\.', type), '', names(pct))
     }
-    if(!isTRUE(nosave)) {
+    if(isTRUE(save)) {
       d_out <- file.path(path, name_, 'final')
       file.copy(d, file.path(path, name_), recursive=TRUE)
       file.rename(file.path(path, name_, basename(d)), d_out)

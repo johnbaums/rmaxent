@@ -95,7 +95,7 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
   lambdas <- split(lambdas, c('other', 'hinge')[
     grepl('hinge', lambdas$type) + 1])
   if (is(newdata, 'RasterStack') | is(newdata, 'RasterBrick') | is(newdata, 'Raster')) {
-    pred_raw <- pred_logistic <- pred_cloglog <- raster::raster(newdata)
+    pred_raw <- pred_logistic <- pred_cloglog <- pred_lfx <- raster::raster(newdata)
     if(!missing(mask)) {
       newdata <- raster::mask(newdata, mask)
     }
@@ -133,6 +133,8 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
   txt <- sprintf('\rCalculating contribution of feature %%%1$dd of %%%1$dd', 
                  nchar(k))
   lfx <- numeric(nrow(newdata))
+  lfx_all <- setNames(vector('list', sum(sapply(lambdas, nrow))),
+                      unlist(lapply(lambdas[2:1], function(x) x$feature)))
   
   if('other' %in% names(lambdas)) {
     for (i in seq_len(nrow(lambdas$other))) {
@@ -140,9 +142,9 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
       x <- with(newdata, eval(parse(text=lambdas$other$feature[i])))
       # clamp feature
       x <- pmin(pmax(x, lambdas$other$min[i]), lambdas$other$max[i])
-      lfx <- lfx + (lambdas$other$lambda[i] * 
-                      with(newdata, (x - lambdas$other$min[i]) /
-                             (lambdas$other$max[i] - lambdas$other$min[i])))
+      lfx_all[[i]] <- (lambdas$other$lambda[i] * (x - lambdas$other$min[i]) /
+                         (lambdas$other$max[i] - lambdas$other$min[i]))
+      lfx <- lfx + lfx_all[[i]]
     }
     rm(x)
   }
@@ -152,13 +154,17 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
       if(!quiet) cat(sprintf(txt, nrow(lambdas$other)+i, k))
       x <- with(newdata, get(sub("'|`", "", lambdas$hinge$feature[i])))
       if(lambdas$hinge$type[i]=='forward_hinge') {
-        lfx <- lfx + with(newdata, (x >= lambdas$hinge$min[i]) * 
-                            (lambdas$hinge$lambda[i] * (x - lambdas$hinge$min[i]) / 
-                               (lambdas$hinge$max[i] - lambdas$hinge$min[i])))
+        lfx_all[[nrow(lambdas$other) + i]] <- 
+          (x >= lambdas$hinge$min[i]) * 
+          (lambdas$hinge$lambda[i] * (x - lambdas$hinge$min[i]) / 
+             (lambdas$hinge$max[i] - lambdas$hinge$min[i]))
+        lfx <- lfx + lfx_all[[nrow(lambdas$other) + i]]
       } else if (lambdas$hinge$type[i]=='reverse_hinge') {
-        lfx <- lfx + with(newdata, (x < lambdas$hinge$max[i]) * 
-                            (lambdas$hinge$lambda[i] * (lambdas$hinge$max[i] - x) / 
-                               (lambdas$hinge$max[i] - lambdas$hinge$min[i])))
+        lfx_all[[nrow(lambdas$other) + i]] <- 
+          (x < lambdas$hinge$max[i]) * 
+          (lambdas$hinge$lambda[i] * (lambdas$hinge$max[i] - x) / 
+             (lambdas$hinge$max[i] - lambdas$hinge$min[i]))
+        lfx <- lfx + lfx_all[[nrow(lambdas$other) + i]]
       }
     }
     rm(x)
@@ -173,15 +179,25 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
     pred_raw[which(!na)] <- raw
     pred_logistic[which(!na)] <- logistic
     pred_cloglog[which(!na)] <- cloglog
+    pred_lfx[which(!na)] <- lfx
+    lfx_each <- lapply(lfx_all, function(x) {
+      r <- raster(pred_raw)
+      r[which(!na)] <- x
+      r
+    })
     return(list(prediction_raw=pred_raw,
                 prediction_logistic=pred_logistic,
-                prediction_cloglog=pred_cloglog))
+                prediction_cloglog=pred_cloglog,
+                prediction_lfx=pred_lfx,
+                #lfx_all=lfx_all
+                lfx_all=lfx_each))
   } else {
     prediction_raw <- prediction_logistic <- prediction_cloglog <- 
-      rep(NA_real_, length(na))
+      prediction_lfx <- rep(NA_real_, length(na))
     prediction_raw[!na] <- raw
     prediction_logistic[!na] <- logistic
     prediction_logistic[!na] <- cloglog
+    prediction_lfx[!na] <- lfx
     return(list(prediction_raw=prediction_raw,
                 prediction_logistic=prediction_logistic,
                 prediction_cloglog=prediction_cloglog))

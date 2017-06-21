@@ -89,7 +89,7 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
   lambdas <- lambdas[[1]]
   is_cat <- unique(
     gsub('\\(|==.*\\)', '', lambdas[lambdas$type=='categorical', 'feature']))
-  nms <- unique(unlist(strsplit(lambdas$var, ',')))
+  nms <- unique(unlist(strsplit(lambdas$var[lambdas$lambda != 0], ',')))
   clamp_limits <- data.table::data.table(lambdas[lambdas$type=='linear', ])
   lambdas <- lambdas[lambdas$lambda != 0, ]
   lambdas <- split(lambdas, c('other', 'hinge')[

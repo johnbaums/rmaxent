@@ -142,32 +142,29 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
       x <- with(newdata, eval(parse(text=lambdas$other$feature[i])))
       # clamp feature
       x <- pmin(pmax(x, lambdas$other$min[i]), lambdas$other$max[i])
-      lfx_all[[i]] <- (lambdas$other$lambda[i] * (x - lambdas$other$min[i]) /
-                         (lambdas$other$max[i] - lambdas$other$min[i]))
+      x01 <- (x - lambdas$other$min[i]) / 
+        (lambdas$other$max[i] - lambdas$other$min[i])
+      lfx_all[[i]] <- lambdas$other$lambda[i] * x01
       lfx <- lfx + lfx_all[[i]]
     }
-    rm(x)
+    rm(x, x01)
   }
   
   if('hinge' %in% names(lambdas)) {
     for (i in seq_len(nrow(lambdas$hinge))) {
       if(!quiet) cat(sprintf(txt, nrow(lambdas$other)+i, k))
       x <- with(newdata, get(sub("'|`", "", lambdas$hinge$feature[i])))
-      if(lambdas$hinge$type[i]=='forward_hinge') {
+      x01 <- (x - lambdas$hinge$min[i]) / (lambdas$hinge$max[i] - lambdas$hinge$min[i])
+      if (lambdas$hinge$type[i]=='reverse_hinge') {
         lfx_all[[nrow(lambdas$other) + i]] <- 
-          (x >= lambdas$hinge$min[i]) * 
-          (lambdas$hinge$lambda[i] * (x - lambdas$hinge$min[i]) / 
-             (lambdas$hinge$max[i] - lambdas$hinge$min[i]))
-        lfx <- lfx + lfx_all[[nrow(lambdas$other) + i]]
-      } else if (lambdas$hinge$type[i]=='reverse_hinge') {
+          (x < lambdas$hinge$max[i]) * lambdas$hinge$lambda[i] * (1-x01)
+      } else {
         lfx_all[[nrow(lambdas$other) + i]] <- 
-          (x < lambdas$hinge$max[i]) * 
-          (lambdas$hinge$lambda[i] * (lambdas$hinge$max[i] - x) / 
-             (lambdas$hinge$max[i] - lambdas$hinge$min[i]))
-        lfx <- lfx + lfx_all[[nrow(lambdas$other) + i]]
+          (x >= lambdas$hinge$min[i]) * lambdas$hinge$lambda[i] * x01
       }
+      lfx <- lfx + lfx_all[[nrow(lambdas$other) + i]]
     }
-    rm(x)
+    rm(x, x01)
   }
   
   raw <- exp(lfx - meta$linearPredictorNormalizer) / meta$densityNormalizer

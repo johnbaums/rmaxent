@@ -167,9 +167,12 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
     rm(x, x01)
   }
   
-  raw <- exp(lfx - meta$linearPredictorNormalizer) / meta$densityNormalizer
+  ln_raw <- lfx - meta$linearPredictorNormalizer - log(meta$densityNormalizer)
+  raw <- exp(ln_raw)
+  logit <- meta$entropy + ln_raw
   cloglog <- 1 - exp(-exp(meta$entropy) * raw)
-  logistic <- raw * exp(meta$entropy) / (1 + raw * exp(meta$entropy))
+  logistic <- plogis(logit)
+  
   #linpred <- rep(NA_real_, length(na))
   #linpred[!na] <- lfx
   if(exists('pred_raw', inherits=FALSE)) {

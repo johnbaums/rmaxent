@@ -28,3 +28,4 @@ This function summarises the \code{data.frame} holding feature
 }
 \keyword{lambdas}
 \keyword{maxent,}
+

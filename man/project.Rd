@@ -4,7 +4,7 @@
 \alias{project}
 \title{Project a fitted Maxent model}
 \usage{
-project(lambdas, newdata, mask, quiet = FALSE)
+project(lambdas, newdata, return_lfx = FALSE, mask, quiet = FALSE)
 }
 \arguments{
 \item{lambdas}{Either (1) a \code{MaxEnt} fitted model object (fitted with 
@@ -17,6 +17,10 @@ a Maxent .lambdas file, or (3) a \code{lambdas} object returned by
 layers/elements/columns whose names correspond to the names of predictors
 used to fit the model. These layers/elements/columns must all have the same
 length.}
+
+\item{return_lfx}{Logical. Should \code{Raster} layers be returned giving
+lambda*feature values for each feature with a non-zero lambda? Currently
+ignored if \code{newdata} is not a \code{Raster*} object.}
 
 \item{mask}{(Optional; requires that \code{newdata} is a \code{Raster*} 
 object.) A \code{Raster} object with \code{NA} values in cells for which 
@@ -39,6 +43,12 @@ If \code{newdata} is a \code{RasterStack} or \code{RasterBrick}, a
 If \code{newdata} is \emph{not} a \code{RasterStack} or \code{RasterBrick},
 the raster layers will be replaced with \code{data.table}s in the returned
 list.
+
+Additionally, if \code{newdata} is a \code{RasterStack} or \code{RasterBrick}
+and \code{return_lfx} is \code{TRUE}, the returned list will include 
+\code{prediction_lfx} (the logit scores for the linear predictor), and 
+\code{lfx_all} (the contributions to \code{prediction_lfx} of each feature
+with a non-zero lambda).
 }
 \description{
 Project a fitted Maxent model by predicting to new environmental data.
@@ -56,7 +66,6 @@ Project a fitted Maxent model by predicting to new environmental data.
 This function is still in development, and no guarantee is made for the
 accuracy of its projections.
 }
-
 \examples{
 # Below we use the dismo::maxent example to fit a Maxent model:
 if (require(dismo) && require(rJava) && 
@@ -90,3 +99,4 @@ if (require(dismo) && require(rJava) &&
 \keyword{maxent,}
 \keyword{predict,}
 \keyword{project}
+

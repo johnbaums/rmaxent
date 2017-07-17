@@ -37,7 +37,6 @@ for predicting to new data.
 This function is still in development, and no guarantee is made for the
 accuracy of its projections.
 }
-
 \examples{
 # Below we use the dismo::maxent example to fit a Maxent model:
 if (require(dismo) && require(rJava) && 
@@ -71,3 +70,4 @@ if (require(dismo) && require(rJava) &&
 \keyword{maxent,}
 \keyword{predict,}
 \keyword{project}
+

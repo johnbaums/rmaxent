@@ -11,6 +11,9 @@
 #'   layers/elements/columns whose names correspond to the names of predictors
 #'   used to fit the model. These layers/elements/columns must all have the same
 #'   length.
+#' @param return_lfx Logical. Should \code{Raster} layers be returned giving
+#'   lambda*feature values for each feature with a non-zero lambda? Currently
+#'   ignored if \code{newdata} is not a \code{Raster*} object.
 #' @param mask (Optional; requires that \code{newdata} is a \code{Raster*} 
 #'   object.) A \code{Raster} object with \code{NA} values in cells for which 
 #'   the model should \emph{not} be projected. These cells will be assigned
@@ -29,6 +32,12 @@
 #' If \code{newdata} is \emph{not} a \code{RasterStack} or \code{RasterBrick},
 #' the raster layers will be replaced with \code{data.table}s in the returned
 #' list.
+#'
+#' Additionally, if \code{newdata} is a \code{RasterStack} or \code{RasterBrick}
+#' and \code{return_lfx} is \code{TRUE}, the returned list will include 
+#' \code{prediction_lfx} (the logit scores for the linear predictor), and 
+#' \code{lfx_all} (the contributions to \code{prediction_lfx} of each feature
+#' with a non-zero lambda).
 #' @details \code{project} uses feature weights described in a .lambas
 #'   file or \code{MaxEnt} object to predict a Maxent model to environmental
 #'   data. This function performs the projection entirely in R, without the need
@@ -70,7 +79,7 @@
 #'   all.equal(values(pred$prediction_logistic), values(pred2))
 #'   all.equal(values(pred$prediction_cloglog), values(pred3))
 #' }
-project <- function(lambdas, newdata, mask, quiet=FALSE) {
+project <- function(lambdas, newdata, return_lfx=FALSE, mask, quiet=FALSE) {
   if(!missing(mask)) {
     if(!methods::is(mask, 'RasterLayer')) {
       stop('mask should be a RasterLayer object')
@@ -185,21 +194,24 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
       r[which(!na)] <- x
       r
     })
-    return(list(prediction_raw=pred_raw,
+    out <- list(prediction_raw=pred_raw,
                 prediction_logistic=pred_logistic,
-                prediction_cloglog=pred_cloglog,
-                prediction_lfx=pred_lfx,
-                #lfx_all=lfx_all
-                lfx_all=lfx_each))
+                prediction_cloglog=pred_cloglog)
+    if(isTRUE(return_lfx)) {
+      out <- c(out, 
+               list(prediction_lfx=pred_lfx,
+                    lfx_all=lfx_each))
+    } 
   } else {
-    prediction_raw <- prediction_logistic <- prediction_cloglog <- 
-      prediction_lfx <- rep(NA_real_, length(na))
+    prediction_raw <- prediction_logistic <- prediction_cloglog <-
+      rep(NA_real_, length(na))
     prediction_raw[!na] <- raw
     prediction_logistic[!na] <- logistic
     prediction_logistic[!na] <- cloglog
-    prediction_lfx[!na] <- lfx
-    return(list(prediction_raw=prediction_raw,
+    #prediction_lfx[!na] <- lfx
+    out <- list(prediction_raw=prediction_raw,
                 prediction_logistic=prediction_logistic,
-                prediction_cloglog=prediction_cloglog))
-  } 
+                prediction_cloglog=prediction_cloglog)
+  }
+  return(out)
 }

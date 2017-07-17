@@ -207,7 +207,7 @@ project <- function(lambdas, newdata, return_lfx=FALSE, mask, quiet=FALSE) {
       rep(NA_real_, length(na))
     prediction_raw[!na] <- raw
     prediction_logistic[!na] <- logistic
-    prediction_logistic[!na] <- cloglog
+    prediction_cloglog[!na] <- cloglog
     #prediction_lfx[!na] <- lfx
     out <- list(prediction_raw=prediction_raw,
                 prediction_logistic=prediction_logistic,

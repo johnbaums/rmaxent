@@ -99,7 +99,7 @@ project <- function(lambdas, newdata, mask, quiet=FALSE) {
     if(!missing(mask)) {
       newdata <- raster::mask(newdata, mask)
     }
-    newdata <- data.table::as.data.table(as.data.frame(newdata))
+    newdata <- data.table::as.data.table(newdata[])
   }
   if (is.matrix(newdata)) newdata <- data.table::as.data.table(newdata)
   if (is.list(newdata) & !is.data.frame(newdata)) {

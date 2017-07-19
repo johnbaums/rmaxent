@@ -1,9 +1,6 @@
-^.*\.Rproj$
-^\.Rproj\.user$
-^\.travis\.yml$
-^README\.Rmd$
-README.html
-README_files
-references.bib
-methods-in-ecology-and-evolution.csl
+.Rproj.user
+.Rhistory
+.RData
+*.Rproj
+README_cache
 ignore

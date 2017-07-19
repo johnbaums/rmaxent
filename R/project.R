@@ -166,10 +166,10 @@ project <- function(lambdas, newdata, return_lfx=FALSE, mask, quiet=FALSE) {
       x01 <- (x - lambdas$hinge$min[i]) / (lambdas$hinge$max[i] - lambdas$hinge$min[i])
       if (lambdas$hinge$type[i]=='reverse_hinge') {
         lfx_all[[nrow(lambdas$other) + i]] <- 
-          (x < lambdas$hinge$max[i]) * lambdas$hinge$lambda[i] * (1-x01)
+          lambdas$hinge$lambda[i] * (x < lambdas$hinge$max[i]) * (1-x01)
       } else {
         lfx_all[[nrow(lambdas$other) + i]] <- 
-          (x >= lambdas$hinge$min[i]) * lambdas$hinge$lambda[i] * x01
+          lambdas$hinge$lambda[i] * (x >= lambdas$hinge$min[i]) * x01
       }
       lfx <- lfx + lfx_all[[nrow(lambdas$other) + i]]
     }

@@ -189,15 +189,15 @@ project <- function(lambdas, newdata, return_lfx=FALSE, mask, quiet=FALSE) {
     pred_logistic[which(!na)] <- logistic
     pred_cloglog[which(!na)] <- cloglog
     pred_lfx[which(!na)] <- lfx
-    lfx_each <- lapply(lfx_all, function(x) {
-      r <- raster(pred_raw)
-      r[which(!na)] <- x
-      r
-    })
     out <- list(prediction_raw=pred_raw,
                 prediction_logistic=pred_logistic,
                 prediction_cloglog=pred_cloglog)
     if(isTRUE(return_lfx)) {
+      lfx_each <- lapply(lfx_all, function(x) {
+        r <- raster(pred_raw)
+        r[which(!na)] <- x
+        r
+      })
       out <- c(out, 
                list(prediction_lfx=pred_lfx,
                     lfx_all=lfx_each))

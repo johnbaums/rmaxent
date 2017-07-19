@@ -50,7 +50,7 @@
 #' @keywords maxent, predict, project
 #' @references 
 #' \itemize{
-#'   \item{Wilson, P. W. (2009) \href{http://gsp.humboldt.edu/OLM/GSP_570/Learning Modules/10 BlueSpray_Maxent_Uncertinaty/MaxEnt lambda files.pdf}{\emph{Guidelines for computing MaxEnt model output values from a lambdas file}}.}
+#'   \item{Wilson, P. W. (2009) \href{http://gsp.humboldt.edu/olm_2015/Courses/GSP_570/Learning Modules/10 BlueSpray_Maxent_Uncertinaty/MaxEnt lambda files.pdf}{\emph{Guidelines for computing MaxEnt model output values from a lambdas file}}.}
 #'   \item{\emph{Maxent software for species habitat modeling, version 3.3.3k} help file (software freely available \href{https://www.cs.princeton.edu/~schapire/maxent/}{here}).}
 #' }
 #' @seealso \code{\link{read_mxe}}

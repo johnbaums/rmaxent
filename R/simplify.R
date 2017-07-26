@@ -3,8 +3,9 @@
 #' Given a candidate set of predictor variables, this function identifies a
 #' subset that meets specified multicollinearity criteria. Subsequently,
 #' backward stepwise variable selection is used to iteratively drop the variable
-#' that contributes least to the model, until the contribution of all variables 
-#' meets a specified minimum.
+#' that contributes least to the model, until the contribution of each variable 
+#' meets a specified minimum, or until a predetermined minimum number of 
+#' predictors remains.
 #' 
 #' @param occ A \code{data.frame} with predictor values for presence localities,
 #'   where columns are predictors, and rows are samples. Additionally, a column
@@ -41,6 +42,7 @@
 #' @param pct_thr The minimum allowable percent variable contribution (where 
 #'   contribution type is specified by \code{type}). This should be specified as
 #'   a value between 0 and 100.
+#' @param k_thr The minimum number of variables to be kept in the model.
 #' @param quiet Logical value indicating whether progress messages should be 
 #'   suppressed (\code{TRUE}) or printed (\code{FALSE}).
 #' @return The final fitted \code{MaxEnt} object.
@@ -76,7 +78,7 @@
 #' }
 simplify <- function(
   occ, bg, path, species_column='species', response_curves=FALSE,
-  logistic_format=TRUE, type='PI', cor_thr, pct_thr, quiet=TRUE) {
+  logistic_format=TRUE, type='PI', cor_thr, pct_thr, k_thr, quiet=TRUE) {
   if(missing(path)) {
     save <- FALSE
     path <- tempdir()
@@ -100,6 +102,7 @@ simplify <- function(
     name_ <- gsub(' ', '_', name)
     swd <- rbind(occ_by_species[[name]], bg_by_species[[name]])
     swd <- swd[, -match(species_column, names(swd))]
+    if(ncol(swd) < k_thr) stop('Initial number of variables < k_thr')
     round(cor(swd, use='pairwise'), 2)
     pa <- rep(1:0, c(nrow(occ_by_species[[name]]), nrow(bg_by_species[[name]])))
     ok <- as.character(
@@ -112,22 +115,31 @@ simplify <- function(
     pct <- m@results[grep(type, rownames(m@results)), ]
     pct <- sort(pct[pct > 0])
     names(pct) <- sub(paste0('\\.', type), '', names(pct))
-    while(min(pct) < pct_thr) {
+    if(min(pct) >= pct_thr || length(pct) <= k_thr) {
+      if(isTRUE(save)) {
+        d_out <- file.path(path, name_, 'final')
+        dir.create(d_out)
+        file.copy(list.files(d, full.names=TRUE), 
+                  d_out, recursive=TRUE)
+      }
+      return(m)
+    }
+    while(min(pct) < pct_thr && length(pct) > k_thr) {
       message('Dropping ', names(pct)[1])
       swd_uncor <- swd_uncor[, -match(names(pct)[1], names(swd_uncor))]
-      d <- tempfile()
+      tmp <- tempfile()
       if(!quiet) message(
         sprintf('%s variables: %s', ncol(swd_uncor), 
                 paste0(colnames(swd_uncor), collapse=', ')))
-      m <- dismo::maxent(swd_uncor, pa, args=args, path=d)
+      m <- dismo::maxent(swd_uncor, pa, args=args, path=tmp)
       pct <- m@results[grep(type, rownames(m@results)), ]
-      pct <- sort(pct[pct > 0])
+      pct <- sort(pct)
       names(pct) <- sub(paste0('\\.', type), '', names(pct))
     }
     if(isTRUE(save)) {
       d_out <- file.path(path, name_, 'final')
-      file.copy(d, file.path(path, name_), recursive=TRUE)
-      file.rename(file.path(path, name_, basename(d)), d_out)
+      file.copy(tmp, file.path(path, name_), recursive=TRUE)
+      file.rename(file.path(path, name_, basename(tmp)), d_out)
       saveRDS(m, file.path(path, name_, 'final/model.rds')) 
     }
     return(m)

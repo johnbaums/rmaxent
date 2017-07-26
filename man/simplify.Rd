@@ -5,7 +5,8 @@
 \title{Identify an uncorrelated, useful subset of Maxent predictors}
 \usage{
 simplify(occ, bg, path, species_column = "species", response_curves = FALSE,
-  logistic_format = TRUE, type = "PI", cor_thr, pct_thr, quiet = TRUE)
+  logistic_format = TRUE, type = "PI", cor_thr, pct_thr, k_thr,
+  quiet = TRUE)
 }
 \arguments{
 \item{occ}{A \code{data.frame} with predictor values for presence localities,
@@ -52,6 +53,8 @@ variables (calculated across presence and background localities).}
 contribution type is specified by \code{type}). This should be specified as
 a value between 0 and 100.}
 
+\item{k_thr}{The minimum number of variables to be kept in the model.}
+
 \item{quiet}{Logical value indicating whether progress messages should be 
 suppressed (\code{TRUE}) or printed (\code{FALSE}).}
 }
@@ -62,8 +65,9 @@ The final fitted \code{MaxEnt} object.
 Given a candidate set of predictor variables, this function identifies a
 subset that meets specified multicollinearity criteria. Subsequently,
 backward stepwise variable selection is used to iteratively drop the variable
-that contributes least to the model, until the contribution of all variables 
-meets a specified minimum.
+that contributes least to the model, until the contribution of each variable 
+meets a specified minimum, or until a predetermined minimum number of 
+predictors remains.
 }
 \details{
 If \code{path} is provided, subdirectories will be created within 
@@ -98,4 +102,3 @@ if (require(dismo) && require(rJava) &&
 \keyword{maxent,}
 \keyword{selection,}
 \keyword{variable}
-

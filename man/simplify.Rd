@@ -95,7 +95,7 @@ if (require(dismo) && require(rJava) &&
   bg <- xyFromCell(predictors, Which(!is.na(sum(predictors)), cells=TRUE))
   occ_swd <- data.frame(species='bradypus', extract(predictors, occ))
   bg_swd <- data.frame(species='bradypus', extract(predictors, bg))
-  m <- simplify(occ_swd, bg_swd, cor_thr=0.7, pct_thr=5, quiet=FALSE)
+  m <- simplify(occ_swd, bg_swd, cor_thr=0.7, pct_thr=5, k_thr=4, quiet=FALSE)
 }
 }
 \keyword{correlation}

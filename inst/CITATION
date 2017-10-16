@@ -4,8 +4,7 @@ note <- sprintf("R package version %s", meta$Version)
 bibentry(bibtype = "Manual",
          title = "{rmaxent}: Tools for working with Maxent in R",
          author = c(person("John", "Baumgartner"),
-                    person("Peter", "Wilson"),
-                    person("Manuel", "Esperon-Rodriguez")),
+                    person("Peter", "Wilson")),
          year = year,
          note = note,
          url = "https://github.com/johnbaums/rmaxent")

@@ -32,11 +32,6 @@ Parse Maxent .lambdas files to extract the types, weights, minima and maxima
 of features, as well as the fitted model's entropy and other values required
 for predicting to new data.
 }
-\section{Warning}{
-
-This function is still in development, and no guarantee is made for the
-accuracy of its projections.
-}
 \examples{
 # Below we use the dismo::maxent example to fit a Maxent model:
 if (require(dismo) && require(rJava) && 
@@ -60,7 +55,7 @@ if (require(dismo) && require(rJava) &&
 }
 \references{
 \itemize{
-  \item{Wilson, P. W. (2009) \href{http://gsp.humboldt.edu/OLM/GSP_570/Learning Modules/10 BlueSpray_Maxent_Uncertinaty/MaxEnt lambda files.pdf}{\emph{Guidelines for computing MaxEnt model output values from a lambdas file}}.}
+  \item{Wilson, P. W. (2009) \href{http://gsp.humboldt.edu/olm_2015/Courses/GSP_570/Learning Modules/10 BlueSpray_Maxent_Uncertinaty/MaxEnt lambda files.pdf}{\emph{Guidelines for computing MaxEnt model output values from a lambdas file}}.}
   \item{\emph{Maxent software for species habitat modeling, version 3.3.3k} help file (software freely available \href{https://www.cs.princeton.edu/~schapire/maxent/}{here}).}
 }
 }
@@ -70,4 +65,3 @@ if (require(dismo) && require(rJava) &&
 \keyword{maxent,}
 \keyword{predict,}
 \keyword{project}
-

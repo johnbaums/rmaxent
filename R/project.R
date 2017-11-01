@@ -148,8 +148,8 @@ project <- function(lambdas, newdata, return_lfx=FALSE, mask, quiet=FALSE) {
   lfx_all <- setNames(vector('list', sum(sapply(lambdas, nrow))),
                       unlist(lapply(lambdas[2:1], function(x) x$feature)))
   
-  if('other' %in% names(lambdas)) {
-    for (i in seq_len(nrow(lambdas$other))) {
+  if(k_other > 0) {
+    for (i in seq_len(k_other)) {
       if(!quiet) cat(sprintf(txt, i, k))
       x <- with(newdata, eval(parse(text=lambdas$other$feature[i])))
       # clamp feature
@@ -162,7 +162,7 @@ project <- function(lambdas, newdata, return_lfx=FALSE, mask, quiet=FALSE) {
     rm(x, x01)
   }
   
-  if('hinge' %in% names(lambdas)) {
+  if(k_hinge > 0) {
     for (i in seq_len(nrow(lambdas$hinge))) {
       if(!quiet) cat(sprintf(txt, k_other + i, k))
       x <- with(newdata, get(sub("'|`", "", lambdas$hinge$feature[i])))

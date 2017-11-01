@@ -21,9 +21,6 @@
 #'   model training; and}
 #'   \item{\code{entropy}}{: the entropy of the fitted model.}
 #' }
-#' @section Warning:
-#' This function is still in development, and no guarantee is made for the
-#' accuracy of its projections.
 #' @keywords maxent, predict, project
 #' @references 
 #' \itemize{

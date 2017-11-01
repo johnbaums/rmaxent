@@ -138,7 +138,10 @@ project <- function(lambdas, newdata, return_lfx=FALSE, mask, quiet=FALSE) {
     newdata[, c(x) := pmax(pmin(get(x), clamp_max), clamp_min)]
   }))
   
-  k <- sum(sapply(lambdas, nrow))
+  k_hinge <- if('hinge' %in% names(lambdas)) nrow(lambdas$hinge) else 0
+  k_other <- if('other' %in% names(lambdas)) nrow(lambdas$other) else 0
+  k <- k_hinge + k_other
+
   txt <- sprintf('\rCalculating contribution of feature %%%1$dd of %%%1$dd', 
                  nchar(k))
   lfx <- numeric(nrow(newdata))
@@ -161,17 +164,17 @@ project <- function(lambdas, newdata, return_lfx=FALSE, mask, quiet=FALSE) {
   
   if('hinge' %in% names(lambdas)) {
     for (i in seq_len(nrow(lambdas$hinge))) {
-      if(!quiet) cat(sprintf(txt, nrow(lambdas$other)+i, k))
+      if(!quiet) cat(sprintf(txt, k_other + i, k))
       x <- with(newdata, get(sub("'|`", "", lambdas$hinge$feature[i])))
       x01 <- (x - lambdas$hinge$min[i]) / (lambdas$hinge$max[i] - lambdas$hinge$min[i])
       if (lambdas$hinge$type[i]=='reverse_hinge') {
-        lfx_all[[nrow(lambdas$other) + i]] <- 
+        lfx_all[[k_other + i]] <- 
           lambdas$hinge$lambda[i] * (x < lambdas$hinge$max[i]) * (1-x01)
       } else {
-        lfx_all[[nrow(lambdas$other) + i]] <- 
+        lfx_all[[k_other + i]] <- 
           lambdas$hinge$lambda[i] * (x >= lambdas$hinge$min[i]) * x01
       }
-      lfx <- lfx + lfx_all[[nrow(lambdas$other) + i]]
+      lfx <- lfx + lfx_all[[k_other + i]]
     }
     rm(x, x01)
   }

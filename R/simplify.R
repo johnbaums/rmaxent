@@ -43,6 +43,9 @@
 #'   contribution type is specified by \code{type}). This should be specified as
 #'   a value between 0 and 100.
 #' @param k_thr The minimum number of variables to be kept in the model.
+#' @param replicates The number of cross-validation replicates to perform. When
+#'   cross-validation is used, the average (over folds) of the variable
+#'   contribution metric is used.
 #' @param quiet Logical value indicating whether progress messages should be 
 #'   suppressed (\code{TRUE}) or printed (\code{FALSE}).
 #' @return The final fitted \code{MaxEnt} object.
@@ -78,7 +81,8 @@
 #' }
 simplify <- function(
   occ, bg, path, species_column='species', response_curves=FALSE,
-  logistic_format=TRUE, type='PI', cor_thr, pct_thr, k_thr, quiet=TRUE) {
+  logistic_format=TRUE, type='PI', cor_thr, pct_thr, k_thr,
+  replicates=1, quiet=TRUE) {
   if(missing(path)) {
     save <- FALSE
     path <- tempdir()
@@ -94,10 +98,10 @@ simplify <- function(
                  stop('type must be either "PI" or "PC".', call.=FALSE))
   
   args <- c('threshold=false', 'hinge=false')
+  if(replicates > 1) args <- c(args, paste0('replicates=', replicates))
   if(isTRUE(response_curves)) args <- c(args, 'responsecurves=TRUE')
   if(isTRUE(logistic_format)) args <- c(args, 'outputformat=logistic')
-  
-  lapply(names(occ_by_species), function(name) {
+  f <- function(name) {
     if(!quiet) message('\n\nDoing ', name)
     name_ <- gsub(' ', '_', name)
     swd <- rbind(occ_by_species[[name]], bg_by_species[[name]])
@@ -108,40 +112,56 @@ simplify <- function(
     ok <- as.character(
       usdm::vifcor(swd, maxobservations=nrow(swd), th=cor_thr)@results$Variables)
     swd_uncor <- swd[, ok]
-    d <- file.path(path, name_, 'full')
+    d <- file.path(path, name_, if(replicates > 1) 'xval' else 'full')
     m <- dismo::maxent(swd_uncor, pa, args=args, path=d)
     if(isTRUE(save)) saveRDS(m, file.path(d, 'model.rds'))
-    
-    pct <- m@results[grep(type, rownames(m@results)), ]
+    pct <- m@results[grep(type, rownames(m@results)), , drop=FALSE]
+    pct <- pct[, ncol(pct)]
     pct <- sort(pct[pct > 0])
     names(pct) <- sub(paste0('\\.', type), '', names(pct))
     if(min(pct) >= pct_thr || length(pct) <= k_thr) {
+      if(replicates > 1) {
+        d <- file.path(path, name_, 'full')
+        m <- dismo::maxent(
+          swd_uncor, pa, args=grep('replicates', args, value=TRUE, invert=TRUE), 
+          path=d)
+      }
       if(isTRUE(save)) {
-        d_out <- file.path(path, name_, 'final')
-        dir.create(d_out)
-        file.copy(list.files(d, full.names=TRUE), 
-                  d_out, recursive=TRUE)
+      #   d_out <- file.path(path, name_, 'final')
+      #   dir.create(d_out)
+      #   file.copy(list.files(d, full.names=TRUE), d_out, recursive=TRUE)
+        saveRDS(m, file.path(d, 'model.rds'))
       }
       return(m)
     }
     while(min(pct) < pct_thr && length(pct) > k_thr) {
       message('Dropping ', names(pct)[1])
       swd_uncor <- swd_uncor[, -match(names(pct)[1], names(swd_uncor))]
-      tmp <- tempfile()
+      #tmp <- tempfile()
       if(!quiet) message(
         sprintf('%s variables: %s', ncol(swd_uncor), 
                 paste0(colnames(swd_uncor), collapse=', ')))
-      m <- dismo::maxent(swd_uncor, pa, args=args, path=tmp)
-      pct <- m@results[grep(type, rownames(m@results)), ]
+      m <- dismo::maxent(swd_uncor, pa, args=args, path=d)
+      pct <- m@results[grep(type, rownames(m@results)), , drop=FALSE]
+      pct <- pct[, ncol(pct)]
       pct <- sort(pct)
       names(pct) <- sub(paste0('\\.', type), '', names(pct))
     }
+    # If model was cross-validated, fit final full model
+    if(replicates > 1) {
+      #tmp <- tempfile()
+      d <- file.path(path, name_, 'full')
+      m <- dismo::maxent(
+        swd_uncor, pa, args=grep('replicates', args, value=TRUE, invert=TRUE), 
+        path=d)
+    }
     if(isTRUE(save)) {
-      d_out <- file.path(path, name_, 'final')
-      file.copy(tmp, file.path(path, name_), recursive=TRUE)
-      file.rename(file.path(path, name_, basename(tmp)), d_out)
-      saveRDS(m, file.path(path, name_, 'final/model.rds')) 
+      # d_out <- file.path(path, name_, 'final')
+      # file.copy(tmp, file.path(path, name_), recursive=TRUE)
+      # file.rename(file.path(path, name_, basename(tmp)), d_out)
+      saveRDS(m, file.path(d, 'model.rds'))
     }
     return(m)
-  })
+  }
+  lapply(names(occ_by_species), f)
 }

@@ -6,7 +6,7 @@
 \usage{
 simplify(occ, bg, path, species_column = "species", response_curves = FALSE,
   logistic_format = TRUE, type = "PI", cor_thr, pct_thr, k_thr,
-  quiet = TRUE)
+  replicates = 1, quiet = TRUE)
 }
 \arguments{
 \item{occ}{A \code{data.frame} with predictor values for presence localities,
@@ -54,6 +54,10 @@ contribution type is specified by \code{type}). This should be specified as
 a value between 0 and 100.}
 
 \item{k_thr}{The minimum number of variables to be kept in the model.}
+
+\item{replicates}{The number of cross-validation replicates to perform. When
+cross-validation is used, the average (over folds) of the variable
+contribution metric is used.}
 
 \item{quiet}{Logical value indicating whether progress messages should be 
 suppressed (\code{TRUE}) or printed (\code{FALSE}).}

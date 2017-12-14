@@ -84,7 +84,7 @@
 #'   m <- simplify(occ_swd, bg_swd, cor_thr=0.7, pct_thr=5, k_thr=4, quiet=FALSE)
 #' }
 simplify <- function(
-  occ, bg, path, species_column='species', response_curves=FALSE,
+  occ, bg, path, species_column='species', response_curves=TRUE,
   logistic_format=TRUE, type='PI', cor_thr, pct_thr, k_thr,
   features='lpq', replicates=1, quiet=TRUE) {
   if(missing(path)) {

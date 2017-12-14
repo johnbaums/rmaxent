@@ -140,9 +140,6 @@ simplify <- function(
           path=d)
       }
       if(isTRUE(save)) {
-      #   d_out <- file.path(path, name_, 'final')
-      #   dir.create(d_out)
-      #   file.copy(list.files(d, full.names=TRUE), d_out, recursive=TRUE)
         saveRDS(m, file.path(d, 'model.rds'))
       }
       return(m)
@@ -150,7 +147,6 @@ simplify <- function(
     while(min(pct) < pct_thr && length(pct) > k_thr) {
       message('Dropping ', names(pct)[1])
       swd_uncor <- swd_uncor[, -match(names(pct)[1], names(swd_uncor))]
-      #tmp <- tempfile()
       if(!quiet) message(
         sprintf('%s variables: %s', ncol(swd_uncor), 
                 paste0(colnames(swd_uncor), collapse=', ')))
@@ -160,18 +156,13 @@ simplify <- function(
       pct <- sort(pct)
       names(pct) <- sub(paste0('\\.', type), '', names(pct))
     }
-    # If model was cross-validated, fit final full model
     if(replicates > 1) {
-      #tmp <- tempfile()
       d <- file.path(path, name_, 'full')
       m <- dismo::maxent(
         swd_uncor, pa, args=grep('replicates', args, value=TRUE, invert=TRUE), 
         path=d)
     }
     if(isTRUE(save)) {
-      # d_out <- file.path(path, name_, 'final')
-      # file.copy(tmp, file.path(path, name_), recursive=TRUE)
-      # file.rename(file.path(path, name_, basename(tmp)), d_out)
       saveRDS(m, file.path(d, 'model.rds'))
     }
     return(m)

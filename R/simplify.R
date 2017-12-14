@@ -130,7 +130,7 @@ simplify <- function(
     if(isTRUE(save)) saveRDS(m, file.path(d, 'model.rds'))
     pct <- m@results[grep(type, rownames(m@results)), , drop=FALSE]
     pct <- pct[, ncol(pct)]
-    pct <- sort(pct[pct > 0])
+    pct <- sort(pct)
     names(pct) <- sub(paste0('\\.', type), '', names(pct))
     if(min(pct) >= pct_thr || length(pct) <= k_thr) {
       if(replicates > 1) {

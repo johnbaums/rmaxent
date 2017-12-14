@@ -132,7 +132,7 @@ simplify <- function(
     pct <- pct[, ncol(pct)]
     pct <- sort(pct)
     names(pct) <- sub(paste0('\\.', type), '', names(pct))
-    if(min(pct) >= pct_thr || length(pct) <= k_thr) {
+    if(min(pct) >= pct_thr || length(pct) == k_thr) {
       if(replicates > 1) {
         d <- file.path(path, name_, 'full')
         m <- dismo::maxent(

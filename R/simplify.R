@@ -121,7 +121,6 @@ simplify <- function(
     swd <- rbind(occ_by_species[[name]], bg_by_species[[name]])
     swd <- swd[, -match(species_column, names(swd))]
     if(ncol(swd) < k_thr) stop('Initial number of variables < k_thr')
-    round(cor(swd, use='pairwise'), 2)
     pa <- rep(1:0, c(nrow(occ_by_species[[name]]), nrow(bg_by_species[[name]])))
     ok <- as.character(
       usdm::vifcor(swd, maxobservations=nrow(swd), th=cor_thr)@results$Variables)

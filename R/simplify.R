@@ -122,9 +122,19 @@ simplify <- function(
     swd <- swd[, -match(species_column, names(swd))]
     if(ncol(swd) < k_thr) stop('Initial number of variables < k_thr', call.=FALSE)
     pa <- rep(1:0, c(nrow(occ_by_species[[name]]), nrow(bg_by_species[[name]])))
-    ok <- as.character(
-      usdm::vifcor(swd, maxobservations=nrow(swd), th=cor_thr)@results$Variables)
-    swd_uncor <- swd[, ok]
+    vc <- usdm::vifcor(swd, maxobservations=nrow(swd), th=cor_thr)
+    vif <- slot(vc, 'results')
+    k <- nrow(vif)
+    exclude <- slot(vc, 'excluded')
+    if(!isTRUE(quiet) & length(exclude) > 0) {
+      message('Dropped due to collinearity: ', paste0(exclude, collapse=', '))
+    }
+    if(k < k_thr)
+      stop(sprintf('Number of uncorrelated variables (%s) < k_thr (%s). %s', 
+                   k, k_thr, 
+                   'Reduce k_thr and/or cor_thr, or find alternative predictors.'),
+           call.=FALSE)
+    swd_uncor <- swd[, vif$Variables]
     d <- file.path(path, name_, if(replicates > 1) 'xval' else 'full')
     m <- dismo::maxent(swd_uncor, pa, args=args, path=d)
     if(isTRUE(save)) saveRDS(m, file.path(d, 'model.rds'))
@@ -145,8 +155,12 @@ simplify <- function(
       return(m)
     }
     while(min(pct) < pct_thr && length(pct) > k_thr) {
-      message('Dropping ', names(pct)[1])
-      swd_uncor <- swd_uncor[, -match(names(pct)[1], names(swd_uncor))]
+      if(sum(pct==pct[1]) > 1) {
+        candidates <- subset(vif, Variables %in% names(pct)[pct==pct[1]])
+        drop <- as.character(candidates$Variables[which.max(candidates$VIF)])
+      }
+      message('Dropping ', drop)
+      swd_uncor <- swd_uncor[, -match(drop, colnames(swd_uncor))]
       if(!quiet) message(
         sprintf('%s variables: %s', ncol(swd_uncor), 
                 paste0(colnames(swd_uncor), collapse=', ')))

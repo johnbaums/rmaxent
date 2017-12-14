@@ -43,6 +43,10 @@
 #'   contribution type is specified by \code{type}). This should be specified as
 #'   a value between 0 and 100.
 #' @param k_thr The minimum number of variables to be kept in the model.
+#' @param features Features to include. Specify as a string comprising one or
+#'   more of 'l' (linear), 'p' (product), 'q' (quadratic), 't' (threshold), and
+#'   'h' (hinge). E.g., \code{features='lpq'} (equivalently,
+#'   \code{features='plq'}). The default is \code{'lpq'}.
 #' @param replicates The number of cross-validation replicates to perform. When
 #'   cross-validation is used, the average (over folds) of the variable
 #'   contribution metric is used.
@@ -82,11 +86,21 @@
 simplify <- function(
   occ, bg, path, species_column='species', response_curves=FALSE,
   logistic_format=TRUE, type='PI', cor_thr, pct_thr, k_thr,
-  replicates=1, quiet=TRUE) {
+  features='lpq', replicates=1, quiet=TRUE) {
   if(missing(path)) {
     save <- FALSE
     path <- tempdir()
   } else save <- TRUE
+  features <- unlist(strsplit(gsub('\\s', '', features), ''))
+  if(length(setdiff(features, c('l', 'p', 'q', 'h', 't'))) > 1)
+    stop("features must be a vector of one or more of ',
+         'l', 'p', 'q', 'h', and 't'.")
+  off <- setdiff(c('l', 'p', 'q', 't', 'h'), features)
+  if(length(off) > 0) {
+    off <- c(l='linear=FALSE', p='product=FALSE', q='quadratic=FALSE',
+             t='threshold=FALSE', h='hinge=FALSE')[off]
+  }
+  off <- unname(off)
   occ_by_species <- split(occ, occ[[species_column]])
   bg_by_species <- split(bg, bg[[species_column]])
   if(!identical(sort(names(occ_by_species)), sort(names(bg_by_species)))) {
@@ -97,7 +111,7 @@ simplify <- function(
                  'PC'='contribution',
                  stop('type must be either "PI" or "PC".', call.=FALSE))
   
-  args <- c('threshold=false', 'hinge=false')
+  args <- off
   if(replicates > 1) args <- c(args, paste0('replicates=', replicates))
   if(isTRUE(response_curves)) args <- c(args, 'responsecurves=TRUE')
   if(isTRUE(logistic_format)) args <- c(args, 'outputformat=logistic')

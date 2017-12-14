@@ -4,9 +4,9 @@
 \alias{simplify}
 \title{Identify an uncorrelated, useful subset of Maxent predictors}
 \usage{
-simplify(occ, bg, path, species_column = "species", response_curves = FALSE,
+simplify(occ, bg, path, species_column = "species", response_curves = TRUE,
   logistic_format = TRUE, type = "PI", cor_thr, pct_thr, k_thr,
-  replicates = 1, quiet = TRUE)
+  features = "lpq", replicates = 1, quiet = TRUE)
 }
 \arguments{
 \item{occ}{A \code{data.frame} with predictor values for presence localities,
@@ -54,6 +54,11 @@ contribution type is specified by \code{type}). This should be specified as
 a value between 0 and 100.}
 
 \item{k_thr}{The minimum number of variables to be kept in the model.}
+
+\item{features}{Features to include. Specify as a string comprising one or
+more of 'l' (linear), 'p' (product), 'q' (quadratic), 't' (threshold), and
+'h' (hinge). E.g., \code{features='lpq'} (equivalently,
+\code{features='plq'}). The default is \code{'lpq'}.}
 
 \item{replicates}{The number of cross-validation replicates to perform. When
 cross-validation is used, the average (over folds) of the variable

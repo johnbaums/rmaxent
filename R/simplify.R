@@ -132,7 +132,7 @@ simplify <- function(
     if(k < k_thr)
       stop(sprintf('Number of uncorrelated variables (%s) < k_thr (%s). %s', 
                    k, k_thr, 
-                   'Reduce k_thr and/or cor_thr, or find alternative predictors.'),
+                   'Reduce k_thr, increase cor_thr, or find alternative predictors.'),
            call.=FALSE)
     swd_uncor <- swd[, as.character(vif$Variables)]
     d <- file.path(path, name_, if(replicates > 1) 'xval' else 'full')

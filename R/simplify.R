@@ -155,10 +155,8 @@ simplify <- function(
       return(m)
     }
     while(min(pct) < pct_thr && length(pct) > k_thr) {
-      if(sum(pct==pct[1]) > 1) {
-        candidates <- subset(vif, Variables %in% names(pct)[pct==pct[1]])
-        drop <- as.character(candidates$Variables[which.max(candidates$VIF)])
-      }
+      candidates <- subset(vif, Variables %in% names(pct)[pct==pct[1]])
+      drop <- as.character(candidates$Variables[which.max(candidates$VIF)])
       message('Dropping ', drop)
       swd_uncor <- swd_uncor[, -match(drop, colnames(swd_uncor))]
       if(!quiet) message(

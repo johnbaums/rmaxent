@@ -134,7 +134,7 @@ simplify <- function(
                    k, k_thr, 
                    'Reduce k_thr and/or cor_thr, or find alternative predictors.'),
            call.=FALSE)
-    swd_uncor <- swd[, vif$Variables]
+    swd_uncor <- swd[, as.character(vif$Variables)]
     d <- file.path(path, name_, if(replicates > 1) 'xval' else 'full')
     m <- dismo::maxent(swd_uncor, pa, args=args, path=d)
     if(isTRUE(save)) saveRDS(m, file.path(d, 'model.rds'))

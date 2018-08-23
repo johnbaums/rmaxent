@@ -50,10 +50,6 @@
 #'   # passing a lambdas file path to lambdas:
 #'   ic(r, occ, file.path(tempdir(), 'species.lambdas'))
 #'   
-#'   # passing a raster file path and lambdas file path to lambdas:
-#'   writeRaster(r, f <- tempfile(fileext='.tif'))
-#'   ic(f, occ, file.path(tempdir(), 'species.lambdas'))
-#'   
 #'   # comparing multiple models
 #'   me2 <- maxent(predictors, occ, args=c('hinge=false', 'threshold=false',
 #'                 'betamultiplier=3'), path=tempdir())
@@ -72,7 +68,7 @@ ic <- function(x, occ, lambdas) {
          ' features are in use.',
          call.=FALSE)
   k <- sapply(lambdas, function(x) sum(x$lambda != 0))
-  occ <- occ[!duplicated(cellFromXY(x, occ)), ]
+  occ <- occ[!duplicated(raster::cellFromXY(x, occ)), ]
   n <- nrow(occ)
   if(all(k > n)) 
     stop('Number of parameters exceeds number of occurrence points for.')

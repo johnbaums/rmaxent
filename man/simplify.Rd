@@ -4,9 +4,10 @@
 \alias{simplify}
 \title{Identify an uncorrelated, useful subset of Maxent predictors}
 \usage{
-simplify(occ, bg, path, species_column = "species", response_curves = TRUE,
-  logistic_format = TRUE, type = "PI", cor_thr, pct_thr, k_thr,
-  features = "lpq", replicates = 1, quiet = TRUE)
+simplify(occ, bg, path, species_column = "species",
+  response_curves = TRUE, logistic_format = TRUE, type = "PI",
+  cor_thr, pct_thr, k_thr, features = "lpq", replicates = 1,
+  quiet = TRUE)
 }
 \arguments{
 \item{occ}{A \code{data.frame} with predictor values for presence localities,

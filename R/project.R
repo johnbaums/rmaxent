@@ -57,7 +57,7 @@
 #' @importFrom raster raster mask compareRaster as.data.frame
 #' @importFrom data.table data.table as.data.table is.data.table :=
 #' @importFrom methods is
-#' @importFrom stats complete.cases
+#' @importFrom stats complete.cases plogis
 #' @export
 #' @examples
 #' # Below we use the dismo::maxent example to fit a Maxent model:
@@ -93,7 +93,7 @@ project <- function(lambdas, newdata, return_lfx=FALSE, mask, quiet=FALSE) {
              'same dimensions, extent, and CRS.')
     }
   }
-  if(!rmaxent:::is.lambdas(lambdas)) lambdas <- parse_lambdas(lambdas)
+  if(!is.lambdas(lambdas)) lambdas <- parse_lambdas(lambdas)
   meta <- lambdas[-1]
   lambdas <- lambdas[[1]]
   is_cat <- unique(
@@ -183,7 +183,7 @@ project <- function(lambdas, newdata, return_lfx=FALSE, mask, quiet=FALSE) {
   raw <- exp(ln_raw)
   logit <- meta$entropy + ln_raw
   cloglog <- 1 - exp(-exp(meta$entropy) * raw)
-  logistic <- plogis(logit)
+  logistic <- stats::plogis(logit)
   
   #linpred <- rep(NA_real_, length(na))
   #linpred[!na] <- lfx

@@ -67,6 +67,7 @@
 #' @keywords maxent, variable selection, correlation
 #' @importFrom usdm vifcor
 #' @importFrom dismo maxent
+#' @importFrom methods slot
 #' @export
 #' @examples
 #' # Below we modify the example given at ?dismo::maxent:
@@ -123,9 +124,9 @@ simplify <- function(
     if(ncol(swd) < k_thr) stop('Initial number of variables < k_thr', call.=FALSE)
     pa <- rep(1:0, c(nrow(occ_by_species[[name]]), nrow(bg_by_species[[name]])))
     vc <- usdm::vifcor(swd, maxobservations=nrow(swd), th=cor_thr)
-    vif <- slot(vc, 'results')
+    vif <- methods::slot(vc, 'results')
     k <- nrow(vif)
-    exclude <- slot(vc, 'excluded')
+    exclude <- methods::slot(vc, 'excluded')
     if(!isTRUE(quiet) & length(exclude) > 0) {
       message('Dropped due to collinearity: ', paste0(exclude, collapse=', '))
     }

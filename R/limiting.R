@@ -32,14 +32,12 @@
 #' }
 limiting <- function(x, me) {
   lam <- parse_lambdas(me)$lambdas
-  best <- lapply(seq_along(me@presence), function(i) {
-    if(any(lam[lam$var==names(me@presence)[i], ]$type=='categorical')) {
-      as.numeric(names(which.max(table(me@presence[, i]))), 
-                 levels=levels(me@presence[, i]))
-    } else {
-      mean(me@presence[, i])
-    }
-  })
+  categ <- lam$type[match(names(me@presence), lam$var)]=='categorical'
+  best <- rep(NA_real_, ncol(me@presence))
+  best[!categ] <- colMeans(me@presence[!categ])
+  best[categ] <- sapply(me@presence[categ], function(x) {
+    as.numeric(names(which.max(table(x))), levels=levels(x))
+  })  
   L <- lapply(seq_along(names(me@presence)), function(i) {
     p <- x[[names(me@presence)]]
     p[[i]][] <- best[[i]]

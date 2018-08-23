@@ -60,24 +60,23 @@
 #' @importFrom stats complete.cases plogis
 #' @export
 #' @examples
+#' \dontrun{
 #' # Below we use the dismo::maxent example to fit a Maxent model:
-#' if (require(dismo) && require(rJava) && 
-#'     file.exists(system.file('java/maxent.jar', package='dismo'))) {
-#'   fnames <- list.files(system.file('ex', package='dismo'), '\\.grd$', 
-#'                        full.names=TRUE )
-#'   predictors <- stack(fnames)
-#'   occurrence <- system.file('ex/bradypus.csv', package='dismo')
-#'   occ <- read.table(occurrence, header=TRUE, sep=',')[,-1]
-#'   me <- maxent(predictors, occ, factors='biome')
+#' fnames <- list.files(system.file('ex', package='dismo'), '\\.grd$', 
+#'                      full.names=TRUE )
+#' predictors <- stack(fnames)
+#' occurrence <- system.file('ex/bradypus.csv', package='dismo')
+#' occ <- read.table(occurrence, header=TRUE, sep=',')[,-1]
+#' me <- maxent(predictors, occ, factors='biome')
 #' 
-#'   # ... and then predict it to the full environmental grids:
-#'   pred <- project(me, predictors)
-#'   # This is equivalent to using the predict method for MaxEnt objects:
-#'   pred2 <- predict(me, predictors, args='outputformat=logistic')
-#'   pred3 <- predict(me, predictors, args='outputformat=cloglog')
-#'   
-#'   all.equal(values(pred$prediction_logistic), values(pred2))
-#'   all.equal(values(pred$prediction_cloglog), values(pred3))
+#' # ... and then predict it to the full environmental grids:
+#' pred <- project(me, predictors)
+#' # This is equivalent to using the predict method for MaxEnt objects:
+#' pred2 <- predict(me, predictors, args='outputformat=logistic')
+#' pred3 <- predict(me, predictors, args='outputformat=cloglog')
+#' 
+#' all.equal(values(pred$prediction_logistic), values(pred2))
+#' all.equal(values(pred$prediction_cloglog), values(pred3))
 #' }
 project <- function(lambdas, newdata, return_lfx=FALSE, mask, quiet=FALSE) {
   if(!missing(mask)) {

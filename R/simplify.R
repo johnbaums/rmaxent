@@ -88,6 +88,10 @@ simplify <- function(
   occ, bg, path, species_column='species', response_curves=TRUE,
   logistic_format=TRUE, type='PI', cor_thr, pct_thr, k_thr,
   features='lpq', replicates=1, quiet=TRUE) {
+  if(!species_column %in% colnames(occ))
+    stop(species_column, ' is not a column of `occ`', call.=FALSE)
+  if(!species_column %in% colnames(bg))
+    stop(species_column, ' is not a column of `bg`', call.=FALSE)
   if(missing(path)) {
     save <- FALSE
     path <- tempdir()

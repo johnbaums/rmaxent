@@ -17,6 +17,6 @@ to_cloglog <- function(x, from, H) {
     stop('When from is "raw", H must not be missing.')
   switch(from, 
          'cloglog'=x,
-         'raw'=1-exp(-exp(H)*r),
+         'raw'=1-exp(-exp(H)*x),
          'logistic'=1-exp(-(x/(1-x))))
 }

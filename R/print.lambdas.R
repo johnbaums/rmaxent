@@ -14,12 +14,10 @@
 #'   \code{unclass(x)}. See \code{str(x)} to examine the structure of an
 #'   object of \code{lambdas} class.
 print.lambdas <- function(x, digits=4, ...) {
-  nonzero <- subset(
-    x$lambdas[, c('feature', 'lambda', 'min', 'max', 'type')], 
-    lambda != 0)
-  zero <- subset(
-    x$lambdas[, c('feature', 'lambda', 'min', 'max', 'type')], 
-    lambda == 0)
+  nonzero <- x$lambdas[x$lambdas$lambda != 0, c(
+    'feature', 'lambda', 'min', 'max', 'type')]
+  zero <- x$lambdas[x$lambdas$lambda == 0, c(
+    'feature', 'lambda', 'min', 'max', 'type')]
   if(nrow(nonzero) > 0) {
     cat('\nFeatures with non-zero weights\n\n')
     print(nonzero, row.names=F, digits=digits, ...)

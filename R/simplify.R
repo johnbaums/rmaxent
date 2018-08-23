@@ -155,7 +155,7 @@ simplify <- function(
       return(m)
     }
     while(min(pct) < pct_thr && length(pct) > k_thr) {
-      candidates <- subset(vif, Variables %in% names(pct)[pct==pct[1]])
+      candidates <- vif[vif$Variables %in% names(pct)[pct==pct[1]], ]
       drop <- as.character(candidates$Variables[which.max(candidates$VIF)])
       message('Dropping ', drop)
       swd_uncor <- swd_uncor[, -match(drop, colnames(swd_uncor))]

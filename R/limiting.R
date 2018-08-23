@@ -32,8 +32,8 @@
 #' }
 limiting <- function(x, me) {
   best <- lapply(seq_along(me@presence), function(i) {
-    if(any(subset(parse_lambdas(me)$lambdas, 
-                  var==names(me@presence)[i])$type=='categorical')) {
+    lam <- parse_lambdas(me)$lambdas
+    if(any(lam[lam$var==names(me@presence)[i], ]$type=='categorical')) {
       as.numeric(names(which.max(table(me@presence[, i]))), 
                  levels=levels(me@presence[, i]))
     } else {

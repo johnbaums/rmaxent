@@ -7,7 +7,7 @@
 n_features(lambdas)
 }
 \arguments{
-\item{lambdas}{A \code{vector} of one or more file paths to Maxent .lambdas 
+\item{lambdas}{A \code{vector} of one or more file paths to Maxent .lambdas
 files, or a \code{list} of one or more \code{MaxEnt} fitted model objects.}
 }
 \value{

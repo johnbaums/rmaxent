@@ -7,63 +7,63 @@
 #' meets a specified minimum, or until a predetermined minimum number of 
 #' predictors remains.
 #' 
-#' @param occ A \code{data.frame} with predictor values for presence localities,
+#' @param occ A `data.frame` with predictor values for presence localities,
 #'   where columns are predictors, and rows are samples. Additionally, a column
 #'   indicating the species being modelled, which should have column name as
-#'   specified by argument \code{species_column} (can be a character string, 
+#'   specified by argument `species_column` (can be a character string, 
 #'   numeric ID, etc.). The set of values given in this species indicator column
 #'   must be identical to the set given in the corresponding column of
-#'   \code{bg}.
-#' @param bg A \code{data.frame} with predictor values for background
+#'   `bg`.
+#' @param bg A `data.frame` with predictor values for background
 #'   localities, where columns are predictors, and rows are samples.
 #'   Additionally, a column indicating the species being modelled, which should
-#'   have column name as specified by argument \code{species_column} (can be a
+#'   have column name as specified by argument `species_column` (can be a
 #'   character string, numeric ID, etc.). The set of values given in this
 #'   species indicator column must be identical to the set given in the
-#'   corresponding column of \code{occ}.
+#'   corresponding column of `occ`.
 #' @param path The output path within which output subdirectories will be 
-#'   created for each species given in the column of \code{occ} (and \code{bg}) 
-#'   specified by \code{species_column}. If missing, a temporary directory will
+#'   created for each species given in the column of `occ` (and `bg`) 
+#'   specified by `species_column`. If missing, a temporary directory will
 #'   be used.
-#' @param species_column The column of \code{occ} (and \code{bg}) that contains 
+#' @param species_column The column of `occ` (and `bg`) that contains 
 #'   values indicating which species the samples belong to (e.g., this might be
 #'   species name, or species ID).
 #' @param response_curves Logical value indicating whether response curves
 #'   should be included in Maxent model html output.
 #' @param logistic_format Logical value indicating whether maxentResults.csv 
-#'   should report logistic value thresholds (\code{TRUE}) or cloglog value
-#'   thresholds (\code{FALSE}). This has no effect for versions of Maxent prior 
+#'   should report logistic value thresholds (`TRUE`) or cloglog value
+#'   thresholds (`FALSE`). This has no effect for versions of Maxent prior 
 #'   to 3.4.
 #' @param type The variable contribution metric to use when dropping variables.
-#'   This can be \code{'PC'} (percent contribution) or \code{'PI'} (permutation
+#'   This can be `'PC'` (percent contribution) or `'PI'` (permutation
 #'   importance; the default). See the Maxent tutorial for additional details.
 #' @param cor_thr The maximum allowable pairwise correlation between predictor
 #'   variables (calculated across presence and background localities). 
 #' @param pct_thr The minimum allowable percent variable contribution (where 
-#'   contribution type is specified by \code{type}). This should be specified as
+#'   contribution type is specified by `type`). This should be specified as
 #'   a value between 0 and 100.
 #' @param k_thr The minimum number of variables to be kept in the model.
 #' @param features Features to include. Specify as a string comprising one or
 #'   more of 'l' (linear), 'p' (product), 'q' (quadratic), 't' (threshold), and
-#'   'h' (hinge). E.g., \code{features='lpq'} (equivalently,
-#'   \code{features='plq'}). The default is \code{'lpq'}.
+#'   'h' (hinge). E.g., `features='lpq'` (equivalently,
+#'   `features='plq'`). The default is `'lpq'`.
 #' @param replicates The number of cross-validation replicates to perform. When
 #'   cross-validation is used, the average (over folds) of the variable
 #'   contribution metric is used.
 #' @param quiet Logical value indicating whether progress messages should be 
-#'   suppressed (\code{TRUE}) or printed (\code{FALSE}).
-#' @return The final fitted \code{MaxEnt} object.
-#' @details If \code{path} is provided, subdirectories will be created within 
-#'   \code{path}, with names equal to the values provided in the 
-#'   \code{species_column} column of \code{occ}. Within these species
+#'   suppressed (`TRUE`) or printed (`FALSE`).
+#' @return The final fitted `MaxEnt` object.
+#' @details If `path` is provided, subdirectories will be created within 
+#'   `path`, with names equal to the values provided in the 
+#'   `species_column` column of `occ`. Within these species
 #'   subdirectories, two additional directories will be created: "full" contains
 #'   the Maxent output corresponding to the model using the full uncorrelated
 #'   subset of variables, while "final" contains the Maxent output corresponding
 #'   to the model fit with the subset of those variables that each contribute at
-#'   least \code{pct_thr}% to the model. Additionally, the \code{MaxEnt} R
+#'   least `pct_thr`% to the model. Additionally, the `MaxEnt` R
 #'   objects for the full and final fitted models are saved into these 
 #'   directories, each with the name "model.rds". These can be read back into R
-#'   with \code{\link{readRDS}}.
+#'   with [readRDS()].
 #' @keywords maxent, variable selection, correlation
 #' @importFrom usdm vifcor
 #' @importFrom dismo maxent

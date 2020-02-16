@@ -15,7 +15,7 @@ version string indicating the version to download. See
 }
 \value{
 Invisible returns \code{0} for success, and a non-zero integer
-  otherwise.
+otherwise.
 }
 \description{
 \code{get_maxent} downloads maxent.jar.
@@ -33,10 +33,10 @@ get_maxent('3.3.3k')
 }
 \references{
 \itemize{
-  \item{\href{https://github.com/mrmaxent/Maxent}{\emph{Github repository: mrmaxent/Maxent}}}
-  \item{\href{https://biodiversityinformatics.amnh.org/open_source/maxent/}{\emph{Steven J. Phillips, Miroslav Dudík, Robert E. Schapire. Maxent software for modeling species niches and distributions.}}}
+\item \href{https://github.com/mrmaxent/Maxent}{\emph{Github repository: mrmaxent/Maxent}}
+\item Steven J. Phillips, Miroslav Dudík, Robert E. Schapire. \href{https://biodiversityinformatics.amnh.org/open_source/maxent/}{Maxent software for modeling species niches and distributions.}
 }
 }
 \seealso{
-\code{\link{maxent_versions}}
+\code{\link[=maxent_versions]{maxent_versions()}}
 }

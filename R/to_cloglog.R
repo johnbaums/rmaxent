@@ -4,13 +4,13 @@
 #' values.
 #'
 #' @param x The values to transform. This can be, e.g., a numeric atomic vector,
-#'   numeric matrix or \code{Raster*} object.
+#'   numeric matrix or `Raster*` object.
 #' @param from A character string indicating the type of the source values. This
 #'   can be one of 'raw', 'cloglog', or 'logistic'.
 #' @param H The entropy of the Maxent distribution. This is only used when
-#'   \code{from='raw'}.
+#'   `from='raw'`.
 #' @keywords maxent, lambdas
-#' @seealso \code{\link{to_logistic}}
+#' @seealso [to_logistic()]
 #' @export
 to_cloglog <- function(x, from, H) {
   if(from=='raw' & missing(H)) 

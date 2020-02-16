@@ -4,14 +4,14 @@
 #' 
 #' @param dir The file path to the directory containing Maxent output.
 #' @param lambdas The name of the .lambdas file representing the fitted model 
-#'   (e.g. \code{'species.lambdas'}), excluding the containing path. If not
-#'   provided, the first (alphabetically) .lambdas file found in \code{dir} will
+#'   (e.g. `'species.lambdas'`), excluding the containing path. If not
+#'   provided, the first (alphabetically) .lambdas file found in `dir` will
 #'   be used.
 #' @param html The name of the .html file containing reported Maxent results 
-#'   (e.g. \code{'maxent.html'}), excluding the containing path. If not 
-#'   provided, the first (alphabetically) .html file found in \code{dir} will be
+#'   (e.g. `'maxent.html'`), excluding the containing path. If not 
+#'   provided, the first (alphabetically) .html file found in `dir` will be
 #'   used.
-#' @return A \code{MaxEnt} object (see \code{\link{MaxEnt-class}}).
+#' @return A `MaxEnt` object (see [dismo::MaxEnt-class]).
 #' @importClassesFrom dismo MaxEnt
 #' @importFrom methods new
 #' @importFrom utils read.csv

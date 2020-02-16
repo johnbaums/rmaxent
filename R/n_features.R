@@ -2,9 +2,9 @@
 #'
 #' Calculate the number of non-zero features used in a Maxent model.
 #'
-#' @param lambdas A \code{vector} of one or more file paths to Maxent .lambdas 
-#'   files, or a \code{list} of one or more \code{MaxEnt} fitted model objects.
-#' @return An vector with one element for each element of \code{lambdas}.
+#' @param lambdas A `vector` of one or more file paths to Maxent .lambdas 
+#'   files, or a `list` of one or more `MaxEnt` fitted model objects.
+#' @return An vector with one element for each element of `lambdas`.
 #' @export
 #' @examples
 #' # Below we use the dismo::maxent example to fit a Maxent model:

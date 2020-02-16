@@ -3,12 +3,11 @@
 \docType{package}
 \name{rmaxent}
 \alias{rmaxent}
-\alias{rmaxent-package}
 \title{rmaxent: Tools for working with Maxent in R}
 \description{
-Species distribution models are becoming increasingly popular in ecology, 
-with 'Maxent' leading the pack of commonly used algorithms. The 
+Species distribution models are becoming increasingly popular in ecology,
+with 'Maxent' leading the pack of commonly used algorithms. The
 \code{rmaxent} package permits efficient projection of fitted 'Maxent' models
-without relying on 'Java'. It also provides some utility functions that 
+without relying on 'Java'. It also provides some utility functions that
 simplify extraction of model information, and summarise results.
 }

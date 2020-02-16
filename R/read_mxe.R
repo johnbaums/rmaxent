@@ -5,43 +5,39 @@
 #'
 #' @param file The path to the mxe file to be read.
 #' @param ext (Optional) An extent to clip the grid to. This must be either an
-#'   \code{Extent} object, a \code{SpatialPolygons*}, or a numeric vector with
+#'   `Extent` object, a `SpatialPolygons*`, or a numeric vector with
 #'   four elements in the order xmin xmax, ymin, ymax.
-#' @param snap Character. One of \code{'near'}, \code{'out'}, or \code{'in'}.
-#'   This will adjust the extent given in \code{ext} such that it aligns with
-#'   the raster data being read. Note that currently, supplying \code{'out'} or
-#'   \code{'in'} will result in the extent being expanded/contracted even if 
-#'   the provided extent already aligns with the grid. \code{snap} is ignored if
-#'   \code{ext} is not provided.
+#' @param snap Character. One of `'near'`, `'out'`, or `'in'`.
+#'   This will adjust the extent given in `ext` such that it aligns with
+#'   the raster data being read. Note that currently, supplying `'out'` or
+#'   `'in'` will result in the extent being expanded/contracted even if 
+#'   the provided extent already aligns with the grid. `snap` is ignored if
+#'   `ext` is not provided.
 #' @param chunk_size A numeric value specifying the size of the chunk of binary 
 #'   data to be read at a time (size is usually in units of KB of data).
-#'   \code{chunk_size} is ignored if \code{ext} is not provided. If clipping the
-#'   imported data (i.e. if \code{ext} is provided), the raster data are read in
-#'   chunks, with \code{chunk_size} values being read, and subsequently filtered
+#'   `chunk_size` is ignored if `ext` is not provided. If clipping the
+#'   imported data (i.e. if `ext` is provided), the raster data are read in
+#'   chunks, with `chunk_size` values being read, and subsequently filtered
 #'   to those values within the desired extent, at a time. Decreasing
-#'   \code{chunk_size} leads to lower system memory demand, but also to longer
+#'   `chunk_size` leads to lower system memory demand, but also to longer
 #'   processing time.
-#' @param return_raster Logical. If \code{FALSE}, then the cell values data will
-#'   returned as a vector; if \code{TRUE}, a \code{raster} object will be
+#' @param return_raster Logical. If `FALSE`, then the cell values data will
+#'   returned as a vector; if `TRUE`, a `raster` object will be
 #'   returned.
-#' @return If \code{return_raster} is \code{TRUE}, a \code{raster} object. If 
-#' \code{return_raster} is \code{FALSE}, a list is returned, with the following
+#' @return If `return_raster` is `TRUE`, a `raster` object. If 
+#' `return_raster` is `FALSE`, a list is returned, with the following
 #' elements:
-#'   \itemize{
-#'   \item{\code{xll}}{: The x coordinate of the lower left corner of the extent.}
-#'   \item{\code{yll}}{: The y coordinate of the lower left corner of the extent.}
-#'   \item{\code{res}}{: The grid resolution. Note that horizontal and
-#'   vertical resolution are assumed equal.}
-#'   \item{\code{nrow}}{: The number of rows of data.}
-#'   \item{\code{ncol}}{: The number of columns of data.}
-#'   \item{\code{nodata}}{: The nodata value.}
-#'   \item{\code{datatype}}{: A character string indicating the data type.}
-#'   \item{\code{data}}{: A vector whose elements are the raster cell values.}
-#' }
-#' @references Based on \href{http://rpubs.com/puddleduck/91946}{"Reading mxe
-#'   files with R - revisited"} by Peter D. Wilson.
+#' * `xll`: The x coordinate of the lower left corner of the extent.
+#' * `yll`: The y coordinate of the lower left corner of the extent.
+#' * `res`: The grid resolution. Note that horizontal and vertical resolution are assumed equal.
+#' * `nrow`: The number of rows of data.
+#' * `ncol`: The number of columns of data.
+#' * `nodata`: The nodata value.
+#' * `datatype`: A character string indicating the data type.
+#' * `data`: A vector whose elements are the raster cell values.
+#' @references Based on ["Reading mxe files with R - revisited"](http://rpubs.com/puddleduck/91946) by Peter D. Wilson.
 #' @keywords maxent, read
-#' @seealso \code{\link{project}}
+#' @seealso [project()]
 #' @importFrom raster raster extent res<-
 #' @importFrom methods is
 #' @importFrom utils txtProgressBar setTxtProgressBar

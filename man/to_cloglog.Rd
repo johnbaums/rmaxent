@@ -8,7 +8,7 @@ to_cloglog(x, from, H)
 }
 \arguments{
 \item{x}{The values to transform. This can be, e.g., a numeric atomic vector,
-numeric matrix or \code{Raster*} object.}
+numeric matrix or \verb{Raster*} object.}
 
 \item{from}{A character string indicating the type of the source values. This
 can be one of 'raw', 'cloglog', or 'logistic'.}
@@ -21,7 +21,7 @@ Transform Maxent raw or logistic values to cloglog (complementary log-log)
 values.
 }
 \seealso{
-\code{\link{to_logistic}}
+\code{\link[=to_logistic]{to_logistic()}}
 }
 \keyword{lambdas}
 \keyword{maxent,}

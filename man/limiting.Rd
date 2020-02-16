@@ -14,13 +14,13 @@ in the Maxent model specified at \code{me}.}
 }
 \value{
 A \code{Raster} object indicating the most limiting factor at each
-  grid cell. This is defined, for each grid cell, as the variable whose value
-  is most responsible for decreasing suitability at that cell. The decrease 
-  in suitability is calculated, for each predictor in turn, relative to the 
-  suitability (logistic prediction) that would be achieved if that predictor
-  took the value equal to the mean at occurrence sites (median for
-  categorical variables). The predictor associated with the largest decrease
-  in suitability is the most limiting factor.
+grid cell. This is defined, for each grid cell, as the variable whose value
+is most responsible for decreasing suitability at that cell. The decrease
+in suitability is calculated, for each predictor in turn, relative to the
+suitability (logistic prediction) that would be achieved if that predictor
+took the value equal to the mean at occurrence sites (median for
+categorical variables). The predictor associated with the largest decrease
+in suitability is the most limiting factor.
 }
 \description{
 Calculate a limiting factor surface corresponding to projections of a Maxent
@@ -40,5 +40,5 @@ if(require(dismo) && require(rJava) &&
 }
 }
 \references{
-Elith, J., Kearney, M. and Phillips, S. (2010), \href{http://doi.org/10.1111/j.2041-210X.2010.00036.x}{The art of modelling range-shifting species.} \emph{Methods in Ecology and Evolution}, 1: 330-342. doi: 10.1111/j.2041-210X.2010.00036.x
+Elith, J., Kearney, M. and Phillips, S. (2010), \href{http://doi.org/10.1111/j.2041-210X.2010.00036.x}{The art of modelling range-shifting species}. \emph{Methods in Ecology and Evolution}, 1: 330-342. doi: 10.1111/j.2041-210X.2010.00036.x
 }

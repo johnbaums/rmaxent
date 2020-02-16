@@ -7,7 +7,7 @@
 similarity(x, ref, full = FALSE)
 }
 \arguments{
-\item{x}{a \code{Raster*}, \code{list}, \code{matrix}, or \code{data.frame}
+\item{x}{a \verb{Raster*}, \code{list}, \code{matrix}, or \code{data.frame}
 where each layer/column/element represents focal values of an environmental
 variable.}
 
@@ -20,16 +20,16 @@ If \code{FALSE} (the default), then only the minimum similarity scores
 across variables will be returned.}
 }
 \value{
-If \code{x} is a \code{Raster*} object, this function returns a
-  \code{Raster} layer giving the corresponding multivariate environmental
-  similarity grid. If \code{full} is \code{TRUE}, this object will be
-  returned in a list along with a \code{Raster*} object giving the
-  environmental similarity for each layer of \code{x}. If \code{x} is a
-  \code{list}, \code{matrix}, or \code{data.frame}, the function will return
-  a vector giving multivariate similarity, or, if \code{full} is \code{TRUE},
-  a \code{list} with a \code{matrix} giving the environmental similarity for
-  each element/column of \code{x}, as well as the multivariate similarity
-  vector.
+If \code{x} is a \verb{Raster*} object, this function returns a
+\code{Raster} layer giving the corresponding multivariate environmental
+similarity grid. If \code{full} is \code{TRUE}, this object will be
+returned in a list along with a \verb{Raster*} object giving the
+environmental similarity for each layer of \code{x}. If \code{x} is a
+\code{list}, \code{matrix}, or \code{data.frame}, the function will return
+a vector giving multivariate similarity, or, if \code{full} is \code{TRUE},
+a \code{list} with a \code{matrix} giving the environmental similarity for
+each element/column of \code{x}, as well as the multivariate similarity
+vector.
 }
 \description{
 Calculate Multivariate Environmental Similarity with respect to a reference
@@ -37,7 +37,7 @@ dataset, for a set of environmental variables.
 }
 \details{
 \code{similarity} uses the MESS algorithm described in Appendix S3
-  of Elith et al. 2010.
+of Elith et al. 2010.
 }
 \examples{
 library(dismo)
@@ -51,7 +51,7 @@ mess <- similarity(predictors, ref, full=TRUE)
 }
 \references{
 \itemize{
-  \item{Elith, J., Kearney, M., and Phillips, S. (2010) \href{https://doi.org/10.1111/j.2041-210X.2010.00036.x}{The art of modelling range-shifting species. \emph{Methods in Ecology and Evolution}, 1: 330-342. doi:10.1111/j.2041-210X.2010.00036.x}}
+\item Elith, J., Kearney, M., and Phillips, S. (2010) \href{https://doi.org/10.1111/j.2041-210X.2010.00036.x}{The art of modelling range-shifting species}. \emph{Methods in Ecology and Evolution}, 1: 330-342. doi:10.1111/j.2041-210X.2010.00036.x
 }
 }
 \keyword{environment}

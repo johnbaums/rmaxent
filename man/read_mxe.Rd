@@ -4,24 +4,23 @@
 \alias{read_mxe}
 \title{Read raster data stored in Maxent's mxe format}
 \usage{
-read_mxe(file, ext, snap = "near", chunk_size = 1e+05,
-  return_raster = TRUE)
+read_mxe(file, ext, snap = "near", chunk_size = 1e+05, return_raster = TRUE)
 }
 \arguments{
 \item{file}{The path to the mxe file to be read.}
 
 \item{ext}{(Optional) An extent to clip the grid to. This must be either an
-\code{Extent} object, a \code{SpatialPolygons*}, or a numeric vector with
+\code{Extent} object, a \verb{SpatialPolygons*}, or a numeric vector with
 four elements in the order xmin xmax, ymin, ymax.}
 
 \item{snap}{Character. One of \code{'near'}, \code{'out'}, or \code{'in'}.
 This will adjust the extent given in \code{ext} such that it aligns with
 the raster data being read. Note that currently, supplying \code{'out'} or
-\code{'in'} will result in the extent being expanded/contracted even if 
+\code{'in'} will result in the extent being expanded/contracted even if
 the provided extent already aligns with the grid. \code{snap} is ignored if
 \code{ext} is not provided.}
 
-\item{chunk_size}{A numeric value specifying the size of the chunk of binary 
+\item{chunk_size}{A numeric value specifying the size of the chunk of binary
 data to be read at a time (size is usually in units of KB of data).
 \code{chunk_size} is ignored if \code{ext} is not provided. If clipping the
 imported data (i.e. if \code{ext} is provided), the raster data are read in
@@ -35,31 +34,29 @@ returned as a vector; if \code{TRUE}, a \code{raster} object will be
 returned.}
 }
 \value{
-If \code{return_raster} is \code{TRUE}, a \code{raster} object. If 
+If \code{return_raster} is \code{TRUE}, a \code{raster} object. If
 \code{return_raster} is \code{FALSE}, a list is returned, with the following
 elements:
-  \itemize{
-  \item{\code{xll}}{: The x coordinate of the lower left corner of the extent.}
-  \item{\code{yll}}{: The y coordinate of the lower left corner of the extent.}
-  \item{\code{res}}{: The grid resolution. Note that horizontal and
-  vertical resolution are assumed equal.}
-  \item{\code{nrow}}{: The number of rows of data.}
-  \item{\code{ncol}}{: The number of columns of data.}
-  \item{\code{nodata}}{: The nodata value.}
-  \item{\code{datatype}}{: A character string indicating the data type.}
-  \item{\code{data}}{: A vector whose elements are the raster cell values.}
+\itemize{
+\item \code{xll}: The x coordinate of the lower left corner of the extent.
+\item \code{yll}: The y coordinate of the lower left corner of the extent.
+\item \code{res}: The grid resolution. Note that horizontal and vertical resolution are assumed equal.
+\item \code{nrow}: The number of rows of data.
+\item \code{ncol}: The number of columns of data.
+\item \code{nodata}: The nodata value.
+\item \code{datatype}: A character string indicating the data type.
+\item \code{data}: A vector whose elements are the raster cell values.
 }
 }
 \description{
-Read (and optionally clip) binary mxe files created by the Maxent habitat 
+Read (and optionally clip) binary mxe files created by the Maxent habitat
 suitability modelling software package.
 }
 \references{
-Based on \href{http://rpubs.com/puddleduck/91946}{"Reading mxe
-  files with R - revisited"} by Peter D. Wilson.
+Based on \href{http://rpubs.com/puddleduck/91946}{"Reading mxe files with R - revisited"} by Peter D. Wilson.
 }
 \seealso{
-\code{\link{project}}
+\code{\link[=project]{project()}}
 }
 \keyword{maxent,}
 \keyword{read}

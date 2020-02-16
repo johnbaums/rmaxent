@@ -7,33 +7,33 @@
 ic(x, occ, lambdas)
 }
 \arguments{
-\item{x}{Either a \code{vector} of one or more file paths to Maxent raw 
+\item{x}{Either a \code{vector} of one or more file paths to Maxent raw
 prediction raster files, or a \code{Raster} or \code{RasterStack}
 containing raw Maxent predictions for which information criteria will be
 calculated.}
 
 \item{occ}{A \code{matrix} or \code{data.frame} containing the coordinates
-for occurrence data used to fit the model. This is assumed to be common to 
+for occurrence data used to fit the model. This is assumed to be common to
 all models being compared.}
 
-\item{lambdas}{A \code{vector} of one or more file paths to Maxent .lambdas 
+\item{lambdas}{A \code{vector} of one or more file paths to Maxent .lambdas
 files, or a \code{list} of one or more \code{MaxEnt} fitted model objects.
-The length of this vector/list should equal the length (or number of 
+The length of this vector/list should equal the length (or number of
 layers) of \code{x}.}
 }
 \value{
 An n x 6 matrix, where n is the number of Maxent models for which
-  information criteria are to be calculated. Columns give \code{n} (the
-  number of occurrence records used for model training), \code{k} (the number
-  of features with non-zero weights), \code{ll} (the negative log likelihood
-  of the model), \code{AIC}, \code{AICc}, and \code{BIC} (as calculated in
-  ENMTools).
+information criteria are to be calculated. Columns give \code{n} (the
+number of occurrence records used for model training), \code{k} (the number
+of features with non-zero weights), \code{ll} (the negative log likelihood
+of the model), \code{AIC}, \code{AICc}, and \code{BIC} (as calculated in
+ENMTools).
 }
 \description{
 Calculate AIC, AICc, and BIC for Maxent models as implemented in ENMTools.
 }
 \section{Warning}{
- 
+
 These information criteria should \emph{not} be calculated for models that
 use hinge or threshold features because the number of predictors is not
 estimated correctly.
@@ -67,7 +67,7 @@ if (require(dismo) && require(rJava) &&
 }
 \references{
 \itemize{
-  \item{Warren, D. L., Glor, R. E. and Turelli, M. 2009. \href{http://doi.org/10.1111/j.1600-0587.2009.06142.x}{ENMTools: a toolbox for comparative studies of environmental niche models.} \emph{Ecography} 33:607-611}
-  \item{\href{http://enmtools.blogspot.com.au/}{ENMTools}}
+\item Warren, D. L., Glor, R. E. and Turelli, M. 2009. \href{http://doi.org/10.1111/j.1600-0587.2009.06142.x}{ENMTools: a toolbox for comparative studies of environmental niche models.} \emph{Ecography} 33:607-611.
+\item \href{http://enmtools.blogspot.com.au/}{ENMTools}
 }
 }

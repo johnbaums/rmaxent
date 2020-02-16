@@ -1,11 +1,11 @@
 #' Extract model entropy
 #'
-#' Extract the entropy of a Maxent model from a \code{lambdas} objects generated
-#' by \code{\link{parse_lambdas}}.
+#' Extract the entropy of a Maxent model from a `lambdas` objects generated
+#' by [parse_lambdas()].
 #'
-#' @param x A \code{lambdas} object returned by \code{\link{parse_lambdas}}.
+#' @param x A `lambdas` object returned by [parse_lambdas()].
 #' @keywords maxent, lambdas
-#' @seealso \code{\link{parse_lambdas}} \code{\link{project}}
+#' @seealso [parse_lambdas()] [project()]
 #' @export
 #' @examples
 #' # Below we use the dismo::maxent example to fit a Maxent model:

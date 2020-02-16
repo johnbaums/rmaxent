@@ -3,32 +3,30 @@
 #' Calculate Multivariate Environmental Similarity with respect to a reference
 #' dataset, for a set of environmental variables.
 #'
-#' @param x a \code{Raster*}, \code{list}, \code{matrix}, or \code{data.frame}
+#' @param x a `Raster*`, `list`, `matrix`, or `data.frame`
 #'   where each layer/column/element represents focal values of an environmental
 #'   variable.
-#' @param ref a \code{list}, \code{matrix}, or \code{data.frame} where each
+#' @param ref a `list`, `matrix`, or `data.frame` where each
 #'   column/element represents reference values for an environmental variable
-#'   (corresponding to those given in \code{x}).
+#'   (corresponding to those given in `x`).
 #' @param full (logical) should similarity values be returned for all variables?
-#'   If \code{FALSE} (the default), then only the minimum similarity scores
+#'   If `FALSE` (the default), then only the minimum similarity scores
 #'   across variables will be returned.
-#' @return If \code{x} is a \code{Raster*} object, this function returns a
-#'   \code{Raster} layer giving the corresponding multivariate environmental
-#'   similarity grid. If \code{full} is \code{TRUE}, this object will be
-#'   returned in a list along with a \code{Raster*} object giving the
-#'   environmental similarity for each layer of \code{x}. If \code{x} is a
-#'   \code{list}, \code{matrix}, or \code{data.frame}, the function will return
-#'   a vector giving multivariate similarity, or, if \code{full} is \code{TRUE},
-#'   a \code{list} with a \code{matrix} giving the environmental similarity for
-#'   each element/column of \code{x}, as well as the multivariate similarity
+#' @return If `x` is a `Raster*` object, this function returns a
+#'   `Raster` layer giving the corresponding multivariate environmental
+#'   similarity grid. If `full` is `TRUE`, this object will be
+#'   returned in a list along with a `Raster*` object giving the
+#'   environmental similarity for each layer of `x`. If `x` is a
+#'   `list`, `matrix`, or `data.frame`, the function will return
+#'   a vector giving multivariate similarity, or, if `full` is `TRUE`,
+#'   a `list` with a `matrix` giving the environmental similarity for
+#'   each element/column of `x`, as well as the multivariate similarity
 #'   vector.
-#' @details \code{similarity} uses the MESS algorithm described in Appendix S3
+#' @details `similarity` uses the MESS algorithm described in Appendix S3
 #'   of Elith et al. 2010.
 #' @keywords maxent, mess, similarity, environment
 #' @references 
-#' \itemize{
-#'   \item{Elith, J., Kearney, M., and Phillips, S. (2010) \href{https://doi.org/10.1111/j.2041-210X.2010.00036.x}{The art of modelling range-shifting species. \emph{Methods in Ecology and Evolution}, 1: 330-342. doi:10.1111/j.2041-210X.2010.00036.x}}
-#' }
+#' * Elith, J., Kearney, M., and Phillips, S. (2010) [The art of modelling range-shifting species](https://doi.org/10.1111/j.2041-210X.2010.00036.x). _Methods in Ecology and Evolution_, 1: 330-342. doi:10.1111/j.2041-210X.2010.00036.x
 #' @importFrom raster stack nlayers init as.data.frame raster
 #' @importFrom methods is
 #' @importFrom stats na.omit

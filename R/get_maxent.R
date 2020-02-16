@@ -1,25 +1,23 @@
 #' Download maxent.jar into dismo/java
 #'
-#' \code{get_maxent} downloads maxent.jar.
+#' `get_maxent` downloads maxent.jar.
 #'
 #' This downloads the java file for the requested Maxent version into the
 #' appropriate dismo/java folder.
 #'
 #' @param version Either 'latest' for the latest stable release, or a character
 #'   version string indicating the version to download. See
-#'   \code{maxent_versions} for available versions. Default is \code{'latest'}.
+#'   `maxent_versions` for available versions. Default is `'latest'`.
 #' @param quiet logical. Should system and success messages be suppressed?
-#' @return Invisible returns \code{0} for success, and a non-zero integer
+#' @return Invisible returns `0` for success, and a non-zero integer
 #'   otherwise.
-#' @seealso \code{\link{maxent_versions}}
+#' @seealso [maxent_versions()]
 #' @importFrom utils download.file tail unzip
 #' @export
 #' @details See references for license and citation details.
 #' @references 
-#' \itemize{
-#'   \item{\href{https://github.com/mrmaxent/Maxent}{\emph{Github repository: mrmaxent/Maxent}}}
-#'   \item{\href{https://biodiversityinformatics.amnh.org/open_source/maxent/}{\emph{Steven J. Phillips, Miroslav Dudík, Robert E. Schapire. Maxent software for modeling species niches and distributions.}}}
-#' }
+#' * GitHub repository: [mrmaxent/Maxent](https://github.com/mrmaxent/Maxent)
+#' * Steven J. Phillips, Miroslav Dudík, Robert E. Schapire. [Maxent software for modeling species niches and distributions.](https://biodiversityinformatics.amnh.org/open_source/maxent/)
 #' @examples
 #' \dontrun{
 #' get_maxent('3.3.3k')

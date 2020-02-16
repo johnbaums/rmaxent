@@ -17,8 +17,8 @@ Returns a \code{character} vector of version numbers.
 }
 \details{
 This obtains a vector of versions numbers for available versions of Maxent,
-from https://github.com/mrmaxent/Maxent/tree/master/ArchivedReleases, as 
-well as the latest version number from 
+from https://github.com/mrmaxent/Maxent/tree/master/ArchivedReleases, as
+well as the latest version number from
 http://biodiversityinformatics.amnh.org/open_source/maxent.
 }
 \examples{
@@ -27,5 +27,5 @@ maxent_versions()
 }
 }
 \seealso{
-\code{\link{get_maxent}}
+\code{\link[=get_maxent]{get_maxent()}}
 }

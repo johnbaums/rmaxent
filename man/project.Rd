@@ -7,10 +7,10 @@
 project(lambdas, newdata, return_lfx = FALSE, mask, quiet = FALSE)
 }
 \arguments{
-\item{lambdas}{Either (1) a \code{MaxEnt} fitted model object (fitted with 
+\item{lambdas}{Either (1) a \code{MaxEnt} fitted model object (fitted with
 the \code{maxent} function in the \code{dismo} package), (2) a file path to
-a Maxent .lambdas file, or (3) a \code{lambdas} object returned by 
-\code{\link{parse_lambdas}}.}
+a Maxent .lambdas file, or (3) a \code{lambdas} object returned by
+\code{\link[=parse_lambdas]{parse_lambdas()}}.}
 
 \item{newdata}{A \code{RasterStack}, \code{RasterBrick}, \code{list},
 \code{data.frame}, \code{data.table}, or \code{matrix} that has
@@ -20,33 +20,33 @@ length.}
 
 \item{return_lfx}{Logical. Should \code{Raster} layers be returned giving
 lambda*feature values for each feature with a non-zero lambda? Currently
-ignored if \code{newdata} is not a \code{Raster*} object.}
+ignored if \code{newdata} is not a \verb{Raster*} object.}
 
-\item{mask}{(Optional; requires that \code{newdata} is a \code{Raster*} 
-object.) A \code{Raster} object with \code{NA} values in cells for which 
+\item{mask}{(Optional; requires that \code{newdata} is a \verb{Raster*}
+object.) A \code{Raster} object with \code{NA} values in cells for which
 the model should \emph{not} be projected. These cells will be assigned
 \code{NA} in the returned output.}
 
 \item{quiet}{Logical. Should projection progress be reported?}
 }
 \value{
-If \code{newdata} is a \code{RasterStack} or \code{RasterBrick}, a 
-  list with three elements: 
- \itemize{
-  \item{\code{prediction_raw}}{: a \code{Raster} layer giving the raw Maxent
-  prediction; and}
-  \item{\code{prediction_logistic}}{: a \code{Raster} layer giving the
-  logistic Maxent prediction.}
-  \item{\code{prediction_cloglog}}{: a \code{Raster} layer giving the
-  cloglog Maxent prediction.}
-}
+If \code{newdata} is a \code{RasterStack} or \code{RasterBrick}, a
+list with three elements:
+\itemize{
+\item \code{prediction_raw}: a \code{Raster} layer giving the raw Maxent
+prediction;
+\item \code{prediction_logistic}: a \code{Raster} layer giving the
+logistic Maxent prediction; and
+\item \code{prediction_cloglog}: a \code{Raster} layer giving the
+cloglog Maxent prediction.
 If \code{newdata} is \emph{not} a \code{RasterStack} or \code{RasterBrick},
 the raster layers will be replaced with \code{data.table}s in the returned
 list.
+}
 
 Additionally, if \code{newdata} is a \code{RasterStack} or \code{RasterBrick}
-and \code{return_lfx} is \code{TRUE}, the returned list will include 
-\code{prediction_lfx} (the logit scores for the linear predictor), and 
+and \code{return_lfx} is \code{TRUE}, the returned list will include
+\code{prediction_lfx} (the logit scores for the linear predictor), and
 \code{lfx_all} (the contributions to \code{prediction_lfx} of each feature
 with a non-zero lambda).
 }
@@ -55,11 +55,11 @@ Project a fitted Maxent model by predicting to new environmental data.
 }
 \details{
 \code{project} uses feature weights described in a .lambas
-  file or \code{MaxEnt} object to predict a Maxent model to environmental
-  data. This function performs the projection entirely in R, without the need
-  for the Maxent Java software. For tested datasets, it performs the 
-  projection in roughly one third of the time taken for the same projection
-  by maxent.jar.
+file or \code{MaxEnt} object to predict a Maxent model to environmental
+data. This function performs the projection entirely in R, without the need
+for the Maxent Java software. For tested datasets, it performs the
+projection in roughly one third of the time taken for the same projection
+by maxent.jar.
 }
 \section{Warning}{
 
@@ -89,12 +89,12 @@ all.equal(values(pred$prediction_cloglog), values(pred3))
 }
 \references{
 \itemize{
-  \item{Wilson, P. W. (2009) \href{http://gsp.humboldt.edu/olm_2015/Courses/GSP_570/Learning Modules/10 BlueSpray_Maxent_Uncertinaty/MaxEnt lambda files.pdf}{\emph{Guidelines for computing MaxEnt model output values from a lambdas file}}.}
-  \item{\emph{Maxent software for species habitat modeling, version 3.3.3k} help file (software freely available \href{https://www.cs.princeton.edu/~schapire/maxent/}{here}).}
+\item Wilson, P. W. (2009) \href{http://gis.humboldt.edu/OLM/Courses/GSP_570/Learning\%20Modules/10\%20BlueSpray_Maxent_Uncertinaty/MaxEnt\%20lambda\%20files.pdf}{\emph{Guidelines for computing MaxEnt model output values from a lambdas file}}.
+\item \emph{Maxent software for species habitat modeling, version 3.3.3k} help file (software freely available \href{https://www.cs.princeton.edu/~schapire/maxent/}{here}).
 }
 }
 \seealso{
-\code{\link{read_mxe}}
+\code{\link[=read_mxe]{read_mxe()}}
 }
 \keyword{maxent,}
 \keyword{predict,}

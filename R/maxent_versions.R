@@ -1,6 +1,6 @@
 #' Show available versions of Maxent
 #'
-#' \code{maxent_versions} returns a vector of available version numbers.
+#' `maxent_versions` returns a vector of available version numbers.
 #'
 #' This obtains a vector of versions numbers for available versions of Maxent,
 #' from https://github.com/mrmaxent/Maxent/tree/master/ArchivedReleases, as 
@@ -8,8 +8,8 @@
 #' http://biodiversityinformatics.amnh.org/open_source/maxent.
 #'
 #' @param include_beta logical. Should beta versions be included?
-#' @return Returns a \code{character} vector of version numbers.
-#' @seealso \code{\link{get_maxent}}
+#' @return Returns a `character` vector of version numbers.
+#' @seealso [get_maxent()]
 #' @importFrom xml2 read_html
 #' @importFrom rvest html_nodes html_text
 #' @importFrom magrittr %>%

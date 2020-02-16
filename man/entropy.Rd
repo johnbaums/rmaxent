@@ -7,11 +7,11 @@
 entropy(x)
 }
 \arguments{
-\item{x}{A \code{lambdas} object returned by \code{\link{parse_lambdas}}.}
+\item{x}{A \code{lambdas} object returned by \code{\link[=parse_lambdas]{parse_lambdas()}}.}
 }
 \description{
 Extract the entropy of a Maxent model from a \code{lambdas} objects generated
-by \code{\link{parse_lambdas}}.
+by \code{\link[=parse_lambdas]{parse_lambdas()}}.
 }
 \examples{
 # Below we use the dismo::maxent example to fit a Maxent model:
@@ -32,7 +32,7 @@ if (require(dismo) && require(rJava) &&
 
 }
 \seealso{
-\code{\link{parse_lambdas}} \code{\link{project}}
+\code{\link[=parse_lambdas]{parse_lambdas()}} \code{\link[=project]{project()}}
 }
 \keyword{lambdas}
 \keyword{maxent,}

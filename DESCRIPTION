@@ -5,7 +5,7 @@ Description: An R implementation of tasks related to 'Maxent' species
     distribution modelling: projecting models; computing information criteria;
     creating limiting factors maps; importing mxe files; recreating MaxEnt class
     objects and parsing .lambdas files.
-Version: 0.8.3.9000
+Version: 0.8.4.9000
 Depends:
     R (>= 3.0.1)
 Imports:
@@ -26,4 +26,5 @@ Authors@R: as.person(c("John B. Baumgartner <johnbaums@gmail.com> [aut, cre]",
                        "Peter D. Wilson [aut]"))
 License: GPL-3
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
+Roxygen: list(markdown = TRUE)

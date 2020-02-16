@@ -7,28 +7,28 @@
 parse_lambdas(lambdas)
 }
 \arguments{
-\item{lambdas}{Either a \code{MaxEnt} fitted model object (fitted with the 
-\code{maxent} function in the \code{dismo} package), or a file path to a 
+\item{lambdas}{Either a \code{MaxEnt} fitted model object (fitted with the
+\code{maxent} function in the \code{dismo} package), or a file path to a
 Maxent .lambdas file.}
 }
 \value{
-A list (of class \code{lambdas}) with five elements: 
- \itemize{
-  \item{\code{lambdas}}{: a \code{data.frame} describing the features used in
-  a Maxent model, including their weights (lambdas), maxima, minima, and 
-  type;}
-  \item{\code{linearPredictorNormalizer}}{: a constant that ensures the
-  linear predictor (the sum of clamped features multiplied by their 
-  respective feature weights) is always negative (for numerical stability);} 
-  \item{\code{densityNormalizer}}{: a scaling constant that ensures Maxent's 
-  raw output sums to 1 over background points;}
-  \item{\code{numBackgroundPoints}}{: the number of background points used in
-  model training; and}
-  \item{\code{entropy}}{: the entropy of the fitted model.}
+A list (of class \code{lambdas}) with five elements:
+\itemize{
+\item \code{lambdas}: a \code{data.frame} describing the features used in
+a Maxent model, including their weights (lambdas), maxima, minima, and
+type;
+\item \code{linearPredictorNormalizer}: a constant that ensures the
+linear predictor (the sum of clamped features multiplied by their
+respective feature weights) is always negative (for numerical stability);
+\item \code{densityNormalizer}: a scaling constant that ensures Maxent's
+raw output sums to 1 over background points;
+\item \code{numBackgroundPoints}: the number of background points used in
+model training; and
+\item \code{entropy}: the entropy of the fitted model.
 }
 }
 \description{
-Parse Maxent .lambdas files to extract the types, weights, minima and maxima 
+Parse Maxent .lambdas files to extract the types, weights, minima and maxima
 of features, as well as the fitted model's entropy and other values required
 for predicting to new data.
 }
@@ -55,12 +55,12 @@ if (require(dismo) && require(rJava) &&
 }
 \references{
 \itemize{
-  \item{Wilson, P. W. (2009) \href{http://gsp.humboldt.edu/olm_2015/Courses/GSP_570/Learning Modules/10 BlueSpray_Maxent_Uncertinaty/MaxEnt lambda files.pdf}{\emph{Guidelines for computing MaxEnt model output values from a lambdas file}}.}
-  \item{\emph{Maxent software for species habitat modeling, version 3.3.3k} help file (software freely available \href{https://www.cs.princeton.edu/~schapire/maxent/}{here}).}
+\item Wilson, P. W. (2009) \href{http://gis.humboldt.edu/OLM/Courses/GSP_570/Learning\%20Modules/10\%20BlueSpray_Maxent_Uncertinaty/MaxEnt\%20lambda\%20files.pdf}{\emph{Guidelines for computing MaxEnt model output values from a lambdas file}}.
+\item \emph{Maxent software for species habitat modeling, version 3.3.3k} help file (software freely available \href{https://www.cs.princeton.edu/~schapire/maxent/}{here}).
 }
 }
 \seealso{
-\code{\link{read_mxe}} \code{\link{project}}
+\code{\link[=read_mxe]{read_mxe()}} \code{\link[=project]{project()}}
 }
 \keyword{maxent,}
 \keyword{predict,}

@@ -9,18 +9,18 @@ import_maxent(dir, lambdas, html)
 \arguments{
 \item{dir}{The file path to the directory containing Maxent output.}
 
-\item{lambdas}{The name of the .lambdas file representing the fitted model 
+\item{lambdas}{The name of the .lambdas file representing the fitted model
 (e.g. \code{'species.lambdas'}), excluding the containing path. If not
 provided, the first (alphabetically) .lambdas file found in \code{dir} will
 be used.}
 
-\item{html}{The name of the .html file containing reported Maxent results 
-(e.g. \code{'maxent.html'}), excluding the containing path. If not 
+\item{html}{The name of the .html file containing reported Maxent results
+(e.g. \code{'maxent.html'}), excluding the containing path. If not
 provided, the first (alphabetically) .html file found in \code{dir} will be
 used.}
 }
 \value{
-A \code{MaxEnt} object (see \code{\link{MaxEnt-class}}).
+A \code{MaxEnt} object (see \link[dismo:MaxEnt-class]{dismo::MaxEnt}).
 }
 \description{
 Create a MaxEnt object from a previously-fitted Maxent model

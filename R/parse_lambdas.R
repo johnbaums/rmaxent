@@ -4,30 +4,26 @@
 #' of features, as well as the fitted model's entropy and other values required
 #' for predicting to new data.
 #'
-#' @param lambdas Either a \code{MaxEnt} fitted model object (fitted with the 
-#'   \code{maxent} function in the \code{dismo} package), or a file path to a 
+#' @param lambdas Either a `MaxEnt` fitted model object (fitted with the 
+#'   `maxent` function in the `dismo` package), or a file path to a 
 #'   Maxent .lambdas file.
-#' @return A list (of class \code{lambdas}) with five elements: 
-#'  \itemize{
-#'   \item{\code{lambdas}}{: a \code{data.frame} describing the features used in
+#' @return A list (of class `lambdas`) with five elements: 
+#' * `lambdas`: a `data.frame` describing the features used in
 #'   a Maxent model, including their weights (lambdas), maxima, minima, and 
-#'   type;}
-#'   \item{\code{linearPredictorNormalizer}}{: a constant that ensures the
+#'   type;
+#' * `linearPredictorNormalizer`: a constant that ensures the
 #'   linear predictor (the sum of clamped features multiplied by their 
-#'   respective feature weights) is always negative (for numerical stability);} 
-#'   \item{\code{densityNormalizer}}{: a scaling constant that ensures Maxent's 
-#'   raw output sums to 1 over background points;}
-#'   \item{\code{numBackgroundPoints}}{: the number of background points used in
-#'   model training; and}
-#'   \item{\code{entropy}}{: the entropy of the fitted model.}
-#' }
+#'   respective feature weights) is always negative (for numerical stability);
+#' * `densityNormalizer`: a scaling constant that ensures Maxent's 
+#'   raw output sums to 1 over background points;
+#' * `numBackgroundPoints`: the number of background points used in
+#'   model training; and
+#' * `entropy`: the entropy of the fitted model.
 #' @keywords maxent, predict, project
 #' @references 
-#' \itemize{
-#'   \item{Wilson, P. W. (2009) \href{http://gsp.humboldt.edu/olm_2015/Courses/GSP_570/Learning Modules/10 BlueSpray_Maxent_Uncertinaty/MaxEnt lambda files.pdf}{\emph{Guidelines for computing MaxEnt model output values from a lambdas file}}.}
-#'   \item{\emph{Maxent software for species habitat modeling, version 3.3.3k} help file (software freely available \href{https://www.cs.princeton.edu/~schapire/maxent/}{here}).}
-#' }
-#' @seealso \code{\link{read_mxe}} \code{\link{project}}
+#' * Wilson, P. W. (2009) [_Guidelines for computing MaxEnt model output values from a lambdas file_](http://gis.humboldt.edu/OLM/Courses/GSP_570/Learning\%20Modules/10\%20BlueSpray_Maxent_Uncertinaty/MaxEnt\%20lambda\%20files.pdf).
+#' * _Maxent software for species habitat modeling, version 3.3.3k_ help file (software freely available [here](https://www.cs.princeton.edu/~schapire/maxent/)).
+#' @seealso [read_mxe()] [project()]
 #' @importFrom methods is
 #' @importFrom utils count.fields
 #' @importFrom stats setNames

@@ -2,44 +2,42 @@
 #'
 #' Project a fitted Maxent model by predicting to new environmental data.
 #'
-#' @param lambdas Either (1) a \code{MaxEnt} fitted model object (fitted with 
-#'   the \code{maxent} function in the \code{dismo} package), (2) a file path to
-#'   a Maxent .lambdas file, or (3) a \code{lambdas} object returned by 
-#'   \code{\link{parse_lambdas}}.
-#' @param newdata A \code{RasterStack}, \code{RasterBrick}, \code{list},
-#'   \code{data.frame}, \code{data.table}, or \code{matrix} that has
+#' @param lambdas Either (1) a `MaxEnt` fitted model object (fitted with 
+#'   the `maxent` function in the `dismo` package), (2) a file path to
+#'   a Maxent .lambdas file, or (3) a `lambdas` object returned by 
+#'   [parse_lambdas()].
+#' @param newdata A `RasterStack`, `RasterBrick`, `list`,
+#'   `data.frame`, `data.table`, or `matrix` that has
 #'   layers/elements/columns whose names correspond to the names of predictors
 #'   used to fit the model. These layers/elements/columns must all have the same
 #'   length.
-#' @param return_lfx Logical. Should \code{Raster} layers be returned giving
+#' @param return_lfx Logical. Should `Raster` layers be returned giving
 #'   lambda*feature values for each feature with a non-zero lambda? Currently
-#'   ignored if \code{newdata} is not a \code{Raster*} object.
-#' @param mask (Optional; requires that \code{newdata} is a \code{Raster*} 
-#'   object.) A \code{Raster} object with \code{NA} values in cells for which 
-#'   the model should \emph{not} be projected. These cells will be assigned
-#'   \code{NA} in the returned output.
+#'   ignored if `newdata` is not a `Raster*` object.
+#' @param mask (Optional; requires that `newdata` is a `Raster*` 
+#'   object.) A `Raster` object with `NA` values in cells for which 
+#'   the model should _not_ be projected. These cells will be assigned
+#'   `NA` in the returned output.
 #' @param quiet Logical. Should projection progress be reported?   
-#' @return If \code{newdata} is a \code{RasterStack} or \code{RasterBrick}, a 
+#' @return If `newdata` is a `RasterStack` or `RasterBrick`, a 
 #'   list with three elements: 
-#'  \itemize{
-#'   \item{\code{prediction_raw}}{: a \code{Raster} layer giving the raw Maxent
-#'   prediction; and}
-#'   \item{\code{prediction_logistic}}{: a \code{Raster} layer giving the
-#'   logistic Maxent prediction.}
-#'   \item{\code{prediction_cloglog}}{: a \code{Raster} layer giving the
-#'   cloglog Maxent prediction.}
-#' }
-#' If \code{newdata} is \emph{not} a \code{RasterStack} or \code{RasterBrick},
-#' the raster layers will be replaced with \code{data.table}s in the returned
+#' * `prediction_raw`: a `Raster` layer giving the raw Maxent
+#'   prediction;
+#' * `prediction_logistic`: a `Raster` layer giving the
+#'   logistic Maxent prediction; and
+#' * `prediction_cloglog`: a `Raster` layer giving the
+#'   cloglog Maxent prediction.
+#' If `newdata` is _not_ a `RasterStack` or `RasterBrick`,
+#' the raster layers will be replaced with `data.table`s in the returned
 #' list.
 #'
-#' Additionally, if \code{newdata} is a \code{RasterStack} or \code{RasterBrick}
-#' and \code{return_lfx} is \code{TRUE}, the returned list will include 
-#' \code{prediction_lfx} (the logit scores for the linear predictor), and 
-#' \code{lfx_all} (the contributions to \code{prediction_lfx} of each feature
+#' Additionally, if `newdata` is a `RasterStack` or `RasterBrick`
+#' and `return_lfx` is `TRUE`, the returned list will include 
+#' `prediction_lfx` (the logit scores for the linear predictor), and 
+#' `lfx_all` (the contributions to `prediction_lfx` of each feature
 #' with a non-zero lambda).
-#' @details \code{project} uses feature weights described in a .lambas
-#'   file or \code{MaxEnt} object to predict a Maxent model to environmental
+#' @details `project` uses feature weights described in a .lambas
+#'   file or `MaxEnt` object to predict a Maxent model to environmental
 #'   data. This function performs the projection entirely in R, without the need
 #'   for the Maxent Java software. For tested datasets, it performs the 
 #'   projection in roughly one third of the time taken for the same projection
@@ -49,11 +47,9 @@
 #' accuracy of its projections.
 #' @keywords maxent, predict, project
 #' @references 
-#' \itemize{
-#'   \item{Wilson, P. W. (2009) \href{http://gsp.humboldt.edu/olm_2015/Courses/GSP_570/Learning Modules/10 BlueSpray_Maxent_Uncertinaty/MaxEnt lambda files.pdf}{\emph{Guidelines for computing MaxEnt model output values from a lambdas file}}.}
-#'   \item{\emph{Maxent software for species habitat modeling, version 3.3.3k} help file (software freely available \href{https://www.cs.princeton.edu/~schapire/maxent/}{here}).}
-#' }
-#' @seealso \code{\link{read_mxe}}
+#' * Wilson, P. W. (2009) [_Guidelines for computing MaxEnt model output values from a lambdas file_](http://gis.humboldt.edu/OLM/Courses/GSP_570/Learning\%20Modules/10\%20BlueSpray_Maxent_Uncertinaty/MaxEnt\%20lambda\%20files.pdf).
+#' * _Maxent software for species habitat modeling, version 3.3.3k_ help file (software freely available [here](https://www.cs.princeton.edu/~schapire/maxent/)).
+#' @seealso [read_mxe()]
 #' @importFrom raster raster mask compareRaster as.data.frame
 #' @importFrom data.table data.table as.data.table is.data.table :=
 #' @importFrom methods is

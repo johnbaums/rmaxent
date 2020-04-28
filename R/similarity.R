@@ -1,7 +1,8 @@
 #' Calculate Multivariate Environmental Similarity
 #'
-#' Calculate Multivariate Environmental Similarity with respect to a reference
-#' dataset, for a set of environmental variables.
+#' Calculate Multivariate Environmental Similarity and most dissimilar/similar 
+#' variables with respect to a reference dataset, for a set of environmental 
+#' variables.
 #'
 #' @param x a `Raster*`, `list`, `matrix`, or `data.frame`
 #'   where each layer/column/element represents focal values of an environmental
@@ -12,16 +13,21 @@
 #' @param full (logical) should similarity values be returned for all variables?
 #'   If `FALSE` (the default), then only the minimum similarity scores
 #'   across variables will be returned.
-#' @return If `x` is a `Raster*` object, this function returns a
-#'   `Raster` layer giving the corresponding multivariate environmental
-#'   similarity grid. If `full` is `TRUE`, this object will be
-#'   returned in a list along with a `Raster*` object giving the
-#'   environmental similarity for each layer of `x`. If `x` is a
-#'   `list`, `matrix`, or `data.frame`, the function will return
-#'   a vector giving multivariate similarity, or, if `full` is `TRUE`,
-#'   a `list` with a `matrix` giving the environmental similarity for
-#'   each element/column of `x`, as well as the multivariate similarity
-#'   vector.
+#' @return If `x` is a `Raster*` object, this function returns a list 
+#'   containing:
+#'   - `similarity`: a `RasterStack` giving the environmental similarities for
+#'   each variable in `x` (only included when `full=TRUE`); 
+#'   - `similarity_min`: a `Raster` layer giving the minimum similarity value 
+#'   across all variables for each location (i.e. the MESS);
+#'   - `mod`: a factor `Raster` layer indicating which variable was most 
+#'   dissimilar to its reference range (i.e. the MoD map, Elith et al. 2010); 
+#'   and
+#'   - `mos`: a factor `Raster` layer indicating which variable was most 
+#'   similar to its reference range.
+#'   
+#'   If `x` is a `list`, `matrix`, or `data.frame`, the function will return
+#'   a list as above, but with `RasterStack` and `Raster` objects replaced by 
+#'   matrix and vectors.
 #' @details `similarity` uses the MESS algorithm described in Appendix S3
 #'   of Elith et al. 2010.
 #' @keywords maxent, mess, similarity, environment
@@ -40,6 +46,13 @@
 #' occ <- read.csv(system.file('ex/bradypus.csv', package='dismo'))[, -1]
 #' ref <- extract(predictors, occ)
 #' mess <- similarity(predictors, ref, full=TRUE)
+#' 
+#' \dontrun{
+#' library(rasterVis)
+#' library(RColorBrewer)
+#' levelplot(mess$mod, col.regions=brewer.pal(8, 'Set1'))
+#' levelplot(mess$mos, col.regions=brewer.pal(8, 'Set1'))
+#' }
 similarity <- function(x, ref, full=FALSE) {
   if(!methods::is(ref, 'data.frame')) {
     ref <- as.data.frame(ref)
@@ -71,17 +84,39 @@ similarity <- function(x, ref, full=FALSE) {
                   ifelse(f > 0.5 & f < 1, (1-f)*200,
                          (rng[2]-p)/diff(rng)*100)))
   }, pct_less, rng, x)
+  
   min_sim <- if(is.matrix(sim)) apply(sim, 1, min) else(min(sim))
+  
+  mins <- apply(sim, 1, which.min)
+  most_dissimilar_vec <- unlist(ifelse(lengths(mins)==0, NA, mins))
+  maxs <- apply(sim, 1, which.max)
+  most_similar_vec <- unlist(ifelse(lengths(maxs)==0, NA, maxs))
+  
   if(isTRUE(r)) {
+    
+    most_dissimilar <- raster::raster(out)
+    most_dissimilar[] <- most_dissimilar_vec
+    most_dissimilar <- as.factor(most_dissimilar)
+    levels(most_dissimilar)[[1]] <- data.frame(ID=seq_len(ncol(sim)), 
+                                               var=colnames(sim))
+    most_similar <- raster::raster(out)
+    most_similar[] <- most_similar_vec
+    most_similar <- as.factor(most_similar)
+    levels(most_similar)[[1]] <- data.frame(ID=seq_len(ncol(sim)), 
+                                            var=colnames(sim))  
+    
     out_min <- raster::raster(out)
     out_min[] <- min_sim
     if(isTRUE(full)) {
       out[] <- sim
-      list(similarity=out, similarity_min=out_min)
-    } else out_min
+      list(similarity=out, similarity_min=out_min, mod=most_dissimilar, 
+           mos=most_similar)
+    } else list(similarity_min=out_min, mod=most_dissimilar, mos=most_similar)
   } else {
     if(isTRUE(full)) {
-      list(similarity=sim, similarity_min=min_sim)
-    } else min_sim
+      list(similarity=sim, similarity_min=min_sim, 
+           mod=most_dissimilar_vec, mos=most_similar_vec)
+    } else list(similarity_min=min_sim, mod=most_dissimilar_vec, 
+                mos=most_similar_vec)
   }
 }

@@ -20,20 +20,28 @@ If \code{FALSE} (the default), then only the minimum similarity scores
 across variables will be returned.}
 }
 \value{
-If \code{x} is a \verb{Raster*} object, this function returns a
-\code{Raster} layer giving the corresponding multivariate environmental
-similarity grid. If \code{full} is \code{TRUE}, this object will be
-returned in a list along with a \verb{Raster*} object giving the
-environmental similarity for each layer of \code{x}. If \code{x} is a
-\code{list}, \code{matrix}, or \code{data.frame}, the function will return
-a vector giving multivariate similarity, or, if \code{full} is \code{TRUE},
-a \code{list} with a \code{matrix} giving the environmental similarity for
-each element/column of \code{x}, as well as the multivariate similarity
-vector.
+If \code{x} is a \verb{Raster*} object, this function returns a list
+containing:
+\itemize{
+\item \code{similarity}: a \code{RasterStack} giving the environmental similarities for
+each variable in \code{x} (only included when \code{full=TRUE});
+\item \code{similarity_min}: a \code{Raster} layer giving the minimum similarity value
+across all variables for each location (i.e. the MESS);
+\item \code{mod}: a factor \code{Raster} layer indicating which variable was most
+dissimilar to its reference range (i.e. the MoD map, Elith et al. 2010);
+and
+\item \code{mos}: a factor \code{Raster} layer indicating which variable was most
+similar to its reference range.
+}
+
+If \code{x} is a \code{list}, \code{matrix}, or \code{data.frame}, the function will return
+a list as above, but with \code{RasterStack} and \code{Raster} objects replaced by
+matrix and vectors.
 }
 \description{
-Calculate Multivariate Environmental Similarity with respect to a reference
-dataset, for a set of environmental variables.
+Calculate Multivariate Environmental Similarity and most dissimilar/similar
+variables with respect to a reference dataset, for a set of environmental
+variables.
 }
 \details{
 \code{similarity} uses the MESS algorithm described in Appendix S3
@@ -48,6 +56,13 @@ predictors <- stack(grep('biome', ff, value=TRUE, invert=TRUE))
 occ <- read.csv(system.file('ex/bradypus.csv', package='dismo'))[, -1]
 ref <- extract(predictors, occ)
 mess <- similarity(predictors, ref, full=TRUE)
+
+\dontrun{
+library(rasterVis)
+library(RColorBrewer)
+levelplot(mess$mod, col.regions=brewer.pal(8, 'Set1'))
+levelplot(mess$mos, col.regions=brewer.pal(8, 'Set1'))
+}
 }
 \references{
 \itemize{

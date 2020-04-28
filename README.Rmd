@@ -27,7 +27,8 @@ The `rmaxent` package also includes function `ic`, which calculates information 
 Finally, `rmaxent` also provides functions to: 
 
 * import raster data stored in Maxent’s binary .mxe raster format (`read_mxe`; written in collaboration with Peter D. Wilson); 
-* parse Maxent .lambdas files (files that contain information about model features), returning information about feature types, weights, minima and maxima, as well as the model’s entropy and other estimated constants (`parse_lambdas`); and 
+* parse Maxent .lambdas files (files that contain information about model features), returning information about feature types, weights, minima and maxima, as well as the model’s entropy and other estimated constants (`parse_lambdas`);
+* create MESS (multivariate environmental similarity surfaces) maps, MoD (most dissimilar variable) maps, "MoS" (most similar variable) maps (`similarity`); and 
 * create limiting factor maps [@Elith2010] that identify the environmental variable that is least favourable at each point across the landscape (`limiting`).
 
 

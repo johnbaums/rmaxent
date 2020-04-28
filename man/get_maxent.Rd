@@ -33,7 +33,7 @@ get_maxent('3.3.3k')
 }
 \references{
 \itemize{
-\item \href{https://github.com/mrmaxent/Maxent}{\emph{Github repository: mrmaxent/Maxent}}
+\item GitHub repository: \href{https://github.com/mrmaxent/Maxent}{mrmaxent/Maxent}
 \item Steven J. Phillips, Miroslav Dudík, Robert E. Schapire. \href{https://biodiversityinformatics.amnh.org/open_source/maxent/}{Maxent software for modeling species niches and distributions.}
 }
 }

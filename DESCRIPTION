@@ -18,7 +18,8 @@ Imports:
     usdm,
     xml2,
     rvest,
-    magrittr
+    magrittr,
+    httr
 Suggests:
     rJava
 Encoding: UTF-8

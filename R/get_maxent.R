@@ -8,11 +8,12 @@
 #' @param version Either 'latest' for the latest stable release, or a character
 #'   version string indicating the version to download. See
 #'   `maxent_versions` for available versions. Default is `'latest'`.
-#' @param quiet logical. Should system and success messages be suppressed?
-#' @return Invisible returns `0` for success, and a non-zero integer
+#' @param quiet logical. Should success message be suppressed?
+#' @return Invisibly returns `0` for success, and a non-zero integer
 #'   otherwise.
 #' @seealso [maxent_versions()]
-#' @importFrom utils download.file tail unzip
+#' @importFrom utils unzip
+#' @importFrom httr set_config config GET write_disk stop_for_status
 #' @export
 #' @details See references for license and citation details.
 #' @references 
@@ -32,16 +33,19 @@ get_maxent <- function(version='latest', quiet=FALSE) {
          call.=FALSE)
   d <- system.file(package='dismo', 'java')
   if(version==latest) {
+    cfg <- httr::set_config(httr::config(ssl_verifypeer = 0L))
+    on.exit(httr::set_config(httr::config(cfg)))
     u <- 'https://biodiversityinformatics.amnh.org/open_source/maxent/maxent.php?op=download'
-    ok <- utils::download.file(u, f <- tempfile(), mode='wb', quiet=quiet)
+    resp <- httr::GET(u, httr::write_disk(f <- tempfile(fileext='.zip')))
+    httr::stop_for_status(resp)
     utils::unzip(f, exdir=d, files='maxent.jar', junkpaths=TRUE)
   } else {
     u <- sprintf('%s/blob/master/ArchivedReleases/%s/maxent.jar?raw=true',
                  'https://github.com/mrmaxent/Maxent', version)
-    ok <- utils::download.file(u, file.path(d, 'maxent.jar'), mode='wb', quiet=quiet)
+    resp <- httr::GET(u, httr::write_disk(file.path(d, 'maxent.jar'), 
+                                            overwrite=TRUE))
+    httr::stop_for_status(resp)
   }
-  if(!quiet && ok==0) message('Maxent version ', version, ' downloaded.')
-  if(ok!=0) warning('Could not download Maxent version ', version, '.',
-                    call.=FALSE)
-  invisible(ok)
+  if(!quiet) message('Maxent version ', version, ' downloaded.')
+  invisible(httr::status_code(resp)!=200)
 }

@@ -11,10 +11,10 @@ get_maxent(version = "latest", quiet = FALSE)
 version string indicating the version to download. See
 \code{maxent_versions} for available versions. Default is \code{'latest'}.}
 
-\item{quiet}{logical. Should system and success messages be suppressed?}
+\item{quiet}{logical. Should success message be suppressed?}
 }
 \value{
-Invisible returns \code{0} for success, and a non-zero integer
+Invisibly returns \code{0} for success, and a non-zero integer
 otherwise.
 }
 \description{

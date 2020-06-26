@@ -13,6 +13,7 @@
 #' @importFrom xml2 read_html
 #' @importFrom rvest html_nodes html_text
 #' @importFrom magrittr %>%
+#' @importFrom httr set_config config GET content
 #' @export
 #' @examples
 #' \dontrun{
@@ -21,11 +22,14 @@
 maxent_versions <- function(include_beta=FALSE) {
   u <- 'https://github.com/mrmaxent/Maxent/tree/master/ArchivedReleases'
   v <- xml2::read_html(u) %>%
-    rvest::html_nodes(xpath='//tbody//tr//td[@class="content"]') %>%
+    rvest::html_nodes(xpath = '//div[@role="rowheader"]//a') %>%
     rvest::html_text()
-  v <- gsub('^\\D+|\\n\\s*$', '', v)
-  u2 <- 'http://biodiversityinformatics.amnh.org/open_source/maxent'
-  v2 <- xml2::read_html(u2) %>%
+  v <- v[-1]
+  cfg <- httr::set_config(httr::config(ssl_verifypeer = 0L))
+  on.exit(httr::set_config(httr::config(cfg)))
+  u2 <- 'https://biodiversityinformatics.amnh.org/open_source/maxent/index.html'
+  v2 <- httr::GET(u2) %>% 
+    httr::content(encoding='UTF-8') %>% 
     rvest::html_nodes(xpath='//*[@id="Form"]/h3[1]') %>% 
     rvest::html_text()
   v2 <- gsub('^\\s*Current\\s+version\\s*|\\s*$', '', v2)

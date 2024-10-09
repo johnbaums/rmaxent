@@ -20,7 +20,7 @@ provided, the first (alphabetically) .html file found in \code{dir} will be
 used.}
 }
 \value{
-A \code{MaxEnt} object (see \link[dismo:MaxEnt-class]{dismo::MaxEnt}).
+A \code{MaxEnt} object (see \link[dismo:maxent]{dismo::MaxEnt}).
 }
 \description{
 Create a MaxEnt object from a previously-fitted Maxent model

@@ -127,7 +127,7 @@ simplify <- function(
     swd <- swd[, -match(species_column, names(swd))]
     if(ncol(swd) < k_thr) stop('Initial number of variables < k_thr', call.=FALSE)
     pa <- rep(1:0, c(nrow(occ_by_species[[name]]), nrow(bg_by_species[[name]])))
-    vc <- usdm::vifcor(swd, maxobservations=nrow(swd), th=cor_thr)
+    vc <- usdm::vifcor(swd, size=nrow(swd), th=cor_thr)
     vif <- methods::slot(vc, 'results')
     k <- nrow(vif)
     exclude <- methods::slot(vc, 'excluded')

@@ -107,7 +107,7 @@ with \code{\link[=readRDS]{readRDS()}}.
 # Below we modify the example given at ?dismo::maxent:
 if (require(dismo) && require(rJava) &&
     file.exists(system.file('java/maxent.jar', package='dismo'))) {
-  fnames <- list.files(system.file('ex', package="dismo"), '\\\\.grd$', 
+  fnames <- list.files(system.file('ex', package="dismo"), '\\\\.grd$',
                        full.names=TRUE)
   fnames <- grep('biome', fnames, value=TRUE, invert=TRUE)
   predictors <- scale(stack(fnames))

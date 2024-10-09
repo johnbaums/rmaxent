@@ -55,7 +55,7 @@ if (require(dismo) && require(rJava) &&
 }
 \references{
 \itemize{
-\item Wilson, P. W. (2009) \href{http://gis.humboldt.edu/OLM/Courses/GSP_570/Learning\%20Modules/10\%20BlueSpray_Maxent_Uncertinaty/MaxEnt\%20lambda\%20files.pdf}{\emph{Guidelines for computing MaxEnt model output values from a lambdas file}}.
+\item Wilson, P. W. (2009) \href{https://gsp.humboldt.edu/olm/Courses/GSP_570/Learning\%20Modules/10\%20BlueSpray_Maxent_Uncertinaty/MaxEnt\%20lambda\%20files.pdf}{\emph{Guidelines for computing MaxEnt model output values from a lambdas file}}.
 \item \emph{Maxent software for species habitat modeling, version 3.3.3k} help file (software freely available \href{https://www.cs.princeton.edu/~schapire/maxent/}{here}).
 }
 }

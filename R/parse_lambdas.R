@@ -21,7 +21,7 @@
 #' * `entropy`: the entropy of the fitted model.
 #' @keywords maxent, predict, project
 #' @references 
-#' * Wilson, P. W. (2009) [_Guidelines for computing MaxEnt model output values from a lambdas file_](http://gis.humboldt.edu/OLM/Courses/GSP_570/Learning\%20Modules/10\%20BlueSpray_Maxent_Uncertinaty/MaxEnt\%20lambda\%20files.pdf).
+#' * Wilson, P. W. (2009) [_Guidelines for computing MaxEnt model output values from a lambdas file_](https://gsp.humboldt.edu/olm/Courses/GSP_570/Learning%20Modules/10%20BlueSpray_Maxent_Uncertinaty/MaxEnt%20lambda%20files.pdf).
 #' * _Maxent software for species habitat modeling, version 3.3.3k_ help file (software freely available [here](https://www.cs.princeton.edu/~schapire/maxent/)).
 #' @seealso [read_mxe()] [project()]
 #' @importFrom methods is

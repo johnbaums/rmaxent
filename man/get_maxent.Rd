@@ -4,12 +4,12 @@
 \alias{get_maxent}
 \title{Download maxent.jar into dismo/java}
 \usage{
-get_maxent(version = "latest", quiet = FALSE)
+get_maxent(version = "3.3.3k", quiet = FALSE)
 }
 \arguments{
 \item{version}{Either 'latest' for the latest stable release, or a character
 version string indicating the version to download. See
-\code{maxent_versions} for available versions. Default is \code{'latest'}.}
+\code{maxent_versions} for available versions. Default is \code{'3.3.3k'}.}
 
 \item{quiet}{logical. Should success message be suppressed?}
 }
